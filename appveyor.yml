@@ -11,7 +11,7 @@ clone_script:
 - ps: Write-Output "This is clone script"
 build_script:
 - ps: >-
-    Get-ChildItem -Path $PSScriptRoot\apps -Recurse -Filter "*.ps1"
+    $PWD.Path
 test_script:
 - ps: Write-Output "This is test script"
 deploy_script:
