@@ -1,16 +1,18 @@
 version: 1.0.{build}
-skip_tags: true
+shallow_clone: true
 init:
-- pwsh: >-
-    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait; 
+- ps: >-
+    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait;
+
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
-install:
-- ps: Write-Output "THis is install script"
 clone_script:
 - ps: Write-Output "This is clone script"
+install:
+- ps: Write-Output "This is install script"
 build_script:
 - ps: >-
     $PWD.Path;
+
     Get-ChildItem -Path $PWD.Path
 test_script:
 - ps: Write-Output "This is test script"
