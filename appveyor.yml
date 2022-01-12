@@ -1,6 +1,5 @@
 version: 1.0.{build}
 skip_tags: true
-clone_depth: 1
 init:
 - pwsh: >-
     Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait; 
