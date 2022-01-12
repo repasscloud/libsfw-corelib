@@ -11,7 +11,8 @@ clone_script:
 - ps: Write-Output "This is clone script"
 build_script:
 - ps: >-
-    $PWD.Path
+    $PWD.Path;
+    Get-ChildItem -Path C:\projects\libsfw -Recurse
 test_script:
 - ps: Write-Output "This is test script"
 deploy_script:
