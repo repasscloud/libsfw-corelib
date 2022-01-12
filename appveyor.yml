@@ -1,20 +1,22 @@
 version: 1.0.{build}
-branches:
-  only:
-  - dev
-skip_tags: true
-clone_depth: 1
+shallow_clone: true
+clone_folder: C:\Projects\libsfw
 init:
-- pwsh: >-
-    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait; 
+- ps: >-
+    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait;
+
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
 install:
-- ps: >-
-    Get-ChildItem -Path $PSScriptRoot\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName };
-    Get-ChildItem -Path $PSScriptRoot\apps -Recurse
+- ps: Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
 build_script:
-- ps: Write-Host "This is build script"
-test: off
+- ps: >-
+    $PWD.Path;
+
+    Get-ChildItem -Path $PWD.Path -Recurse
+test_script:
+- ps: Write-Output "This is test script"
+deploy_script:
+- pwsh: Write-Output "This is deployment script"
 on_success:
 - ps: '[System.Console]::WriteLine("Success building")'
 on_failure:
