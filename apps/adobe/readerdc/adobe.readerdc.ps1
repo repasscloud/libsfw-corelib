@@ -31,6 +31,6 @@ $d.id.installers.x86.path = "ftp://localhost/apps/" + $d.id.publisher.ToLower() 
 
 [System.String]$app_name = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','')
 
-$d | ConvertTo-Json -Depth 4 | Out-File -FilePath "{$PSScriptRoot}\${app_name}.latest.json" -Encoding utf8 -Force -Confirm:$false
+$d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${PSScriptRoot}\${app_name}.latest.json" -Encoding utf8 -Force -Confirm:$false
 
 #https://get.adobe.com/reader/completion/?installer=Reader_DC_2021.005.20060_MUI_for_Windows&stype=7659&direct=true&standalone=1
