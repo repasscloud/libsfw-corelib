@@ -1,5 +1,6 @@
 version: 1.0.{build}
-shallow_clone: true
+shallow_clone: false
+clone_folder: C:\Projects\libsfw
 init:
 - ps: >-
     Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait;
@@ -13,7 +14,7 @@ build_script:
 - ps: >-
     $PWD.Path;
 
-    Get-ChildItem -Path $PWD.Path
+    Get-ChildItem -Path C:\Projects\libsfw
 test_script:
 - ps: Write-Output "This is test script"
 deploy_script:
