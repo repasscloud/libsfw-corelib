@@ -8,7 +8,9 @@ init:
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
 install:
 - ps: >-
-    Get-ChildItem -Path . -Recurse -Filter "*.ps1" | ForEach-Object { $_.FullName }
+    Get-ChildItem -Path . -Recurse -Filter "*.ps1" | ForEach-Object { $_.FullName };
+
+    $PWD.Path
 build_script:
 - ps: >-
     $PWD.Path;
