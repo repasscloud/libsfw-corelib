@@ -12,7 +12,7 @@ clone_script:
 build_script:
 - ps: >-
     $PWD.Path;
-    Get-ChildItem -Path C:\projects\libsfw -Recurse
+    Get-ChildItem -Path $PWD.Path
 test_script:
 - ps: Write-Output "This is test script"
 deploy_script:
