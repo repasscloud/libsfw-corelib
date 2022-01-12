@@ -7,7 +7,8 @@ init:
 
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
 install:
-- ps: Write-Output "This is install script"
+- ps: >-
+    Get-ChildItem -Path . -Recurse -Filter "*.ps1" | ForEach-Object { $_.FullName }
 build_script:
 - ps: >-
     $PWD.Path;
@@ -22,8 +23,4 @@ on_success:
 on_failure:
 - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
-
-
-#'[System.Console]::WriteLine("Project finished building")'
+- ps: '[System.Console]::WriteLine("Project finished building")''
