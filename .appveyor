@@ -1,0 +1,23 @@
+version: 1.0.{build}
+branches:
+  only:
+  - dev
+skip_tags: true
+clone_depth: 1
+init:
+- pwsh: >-
+    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait; 
+    Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
+install:
+- ps: >-
+    Get-ChildItem -Path $PSScriptRoot\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName };
+    Get-ChildItem -Path $PSScriptRoot\apps -Recurse
+build_script:
+- ps: Write-Host "This is build script"
+test: off
+on_success:
+- ps: '[System.Console]::WriteLine("Success building")'
+on_failure:
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+- ps: '[System.Console]::WriteLine("Project finished building")'
