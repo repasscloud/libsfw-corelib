@@ -19,16 +19,20 @@ init:
 
     Start-Process -FilePath python -ArgumentList "C:\Projects\s3cmd\setup.py","install" -Wait
 
-    Move-Item -Path .\lib\ini_files\s3cmd.ini -Destination C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Confirm:$false -Force
-#install:
-#- ps: >-
-#    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
-#
-#    
-#
-#    . .\lib\scripts\Find-InTextFile.ps1
-#    
-#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UCOBCC2XCRM5DHFGX3__' -Replace 'UCOBCC2XCRM5DHFGX3VY'
+    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/Find-InTextFile.ps1 -OutFile $env:TEMP\Find-InTextFile.ps1
+
+    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/s3cmd.ini -OutFile C:\Users\appveyor\AppData\Roaming\s3cmd.ini
+
+    . .\lib\scripts\Find-InTextFile.ps1
+
+    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'UUUUUUUUUUUUUUUUUUU' -Replace 'wine'
+
+    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' -Replace 'wine'
+
+    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace 'wine'
+install:
+- ps: >-
+    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
 build_script:
 - ps: 'Write-Output "Build dir is: $($env:APPVEYOR_BUILD_FOLDER)"'
 #    python C:\Projects\s3cmd-2.2.0\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
