@@ -7,11 +7,15 @@ init:
 
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
 
-    Invoke-WebRequest -UseBasicParsing -Uri https://github.com/s3tools/s3cmd/releases/download/v2.2.0/s3cmd-2.2.0.zip -OutFile 'C:\Projects\s3cmd-2.2.0.zip'
+    Invoke-WebRequest -UseBasicParsing -Uri https://github.com/s3tools/s3cmd/releases/download/v2.2.0/s3cmd-2.2.0.zip -OutFile $env:TEMP\s3cmd-2.2.0.zip
 
-    unzip 'C:\Projects\s3cmd-2.2.0.zip'
+    unzip $env:TEMP\s3cmd-2.2.0.zip C:\Projects
 
-    Start-Process -FilePath python -ArgumentList 'C:\Projects\s3cmd-2.2.0\setup.py','install' -Wait
+    Rename-Item -Path C:\Projects\s3cmd-2.2.0 -NewName s3cmd -Confirm:$false -Force
+
+    pip install python-dateutil
+
+    Start-Process -FilePath python -ArgumentList "C:\Projects\s3cmd\setup.py","install" -Wait
 #install:
 #- ps: >-
 #    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
@@ -22,7 +26,7 @@ init:
 #    
 #    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UCOBCC2XCRM5DHFGX3__' -Replace 'UCOBCC2XCRM5DHFGX3VY'
 build_script:
-- ps: Write-Output 'build goes here'
+- ps: 'Write-Output "Build dir is: $($env:APPVEYOR_BUILD_FOLDER)"'
 #    python C:\Projects\s3cmd-2.2.0\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
 test_script:
 - ps: Write-Output "This is test script"
@@ -33,7 +37,4 @@ on_success:
 on_failure:
 - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
-
-#'[System.Console]::WriteLine("Project finished building")'
+- ps: '[System.Console]::WriteLine("Project finished building")'
