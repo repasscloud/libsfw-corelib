@@ -17,19 +17,19 @@ init:
     
     pip install python-dateutil
 
-    Start-Process -FilePath python -ArgumentList "C:\Projects\s3cmd\setup.py","install" -Wait
+#    Start-Process -FilePath python -ArgumentList "C:\Projects\s3cmd\setup.py","install" -Wait
 
-    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/Find-InTextFile.ps1 -OutFile $env:TEMP\Find-InTextFile.ps1
+#    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/Find-InTextFile.ps1 -OutFile $env:TEMP\Find-InTextFile.ps1
 
-    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/s3cmd.ini -OutFile C:\Users\appveyor\AppData\Roaming\s3cmd.ini
+#    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/s3cmd.ini -OutFile C:\Users\appveyor\AppData\Roaming\s3cmd.ini
 
-    . $env:TEMP\Find-InTextFile.ps1
+#    . $env:TEMP\Find-InTextFile.ps1
 
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'UUUUUUUUUUUUUUUUUUU' -Replace $env:S3ACCESSKEY
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'UUUUUUUUUUUUUUUUUUU' -Replace $env:S3ACCESSKEY
 
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' -Replace $env:S3SECRETKEY
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' -Replace $env:S3SECRETKEY
 
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace $env:S3URL
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace $env:S3URL
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
