@@ -12,20 +12,18 @@ init:
     unzip 'C:\Projects\s3cmd-2.2.0.zip'
 
     Start-Process -FilePath python -ArgumentList 'C:\Projects\s3cmd-2.2.0\setup.py','install' -Wait
-install:
-- ps: >-
-    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
-
-    Copy-Item -Path .\lib\ini_files\s3cmd.ini -Destination C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Confirm:$false -Force
-
-    . .\lib\scripts\Find-InTextFile.ps1
-    
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UCOBCC2XCRM5DHFGX3__' -Replace 'UCOBCC2XCRM5DHFGX3VY'
-build_script:
-- ps: >-
-    Get-ChildItem -Path $PWD.Path -Recurse
-
-    python C:\Projects\s3cmd-2.2.0\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
+#install:
+#- ps: >-
+#    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
+#
+#    Copy-Item -Path .\lib\ini_files\s3cmd.ini -Destination C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Confirm:$false -Force
+#
+#    . .\lib\scripts\Find-InTextFile.ps1
+#    
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UCOBCC2XCRM5DHFGX3__' -Replace 'UCOBCC2XCRM5DHFGX3VY'
+#build_script:
+#- ps: >-
+#    python C:\Projects\s3cmd-2.2.0\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
 test_script:
 - ps: Write-Output "This is test script"
 deploy_script:
