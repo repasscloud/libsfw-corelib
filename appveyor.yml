@@ -25,7 +25,7 @@ init:
 
     . $env:TEMP\Find-InTextFile.ps1
 
-    Test-Path -Path 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini'
+    $env:S3ACCESSKEY | Out-File C:\Users\appveyor\AppData\Roaming\s3key.txt; Get-Content C:\Users\appveyor\AppData\Roaming\s3key.txt
 
 #    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UUUUUUUUUUUUUUUUUUU' -Replace $env:S3ACCESSKEY
 
