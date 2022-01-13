@@ -13,7 +13,7 @@ init:
 
     Rename-Item -Path C:\Projects\s3cmd-2.2.0 -NewName s3cmd -Confirm:$false -Force
 
-    'C:\Python310\python.exe -m pip install --upgrade pip'
+    Start-Process -FilePath C:\Python310\python.exe -ArgumentList "-m","pip install","--upgrade","pip" -Wait
     
     pip install python-dateutil
 
