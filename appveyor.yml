@@ -18,7 +18,7 @@ install:
 
     Copy-Item -Path .\lib\ini_files\s3cmd.ini -Destination C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Confirm:$false -Force
 
-    . .\lib\scripts\Find-InTextFiile.ps1
+    . .\lib\scripts\Find-InTextFile.ps1
     
     Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UCOBCC2XCRM5DHFGX3__' -Replace 'UCOBCC2XCRM5DHFGX3VY'
 build_script:
