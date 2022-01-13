@@ -25,11 +25,13 @@ init:
 
     . $env:TEMP\Find-InTextFile.ps1
 
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UUUUUUUUUUUUUUUUUUU' -Replace $env:S3ACCESSKEY
+    Test-Path -Path 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini'
 
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' -Replace $env:S3SECRETKEY
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UUUUUUUUUUUUUUUUUUU' -Replace $env:S3ACCESSKEY
 
-    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace $env:S3URL
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' -Replace $env:S3SECRETKEY
+
+#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace $env:S3URL
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
