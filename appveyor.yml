@@ -18,11 +18,13 @@ init:
     pip install python-dateutil
 
     Start-Process -FilePath python -ArgumentList "C:\Projects\s3cmd\setup.py","install" -Wait
+
+    Move-Item -Path .\lib\ini_files\s3cmd.ini -Destination C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Confirm:$false -Force
 #install:
 #- ps: >-
 #    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
 #
-#    Copy-Item -Path .\lib\ini_files\s3cmd.ini -Destination C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Confirm:$false -Force
+#    
 #
 #    . .\lib\scripts\Find-InTextFile.ps1
 #    
@@ -33,8 +35,6 @@ build_script:
 test_script:
 - ps: >-
     Write-Output "This is test script"
-
-    dir C:\Projects
 deploy_script:
 - pwsh: Write-Output "This is deployment script"
 on_success:
