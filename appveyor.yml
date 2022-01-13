@@ -22,6 +22,8 @@ init:
     Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/s3cmd.ini -OutFile C:\Users\appveyor\AppData\Roaming\s3cmd.ini
 
     (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "UUUUUUUUUUUUUUUUUUU", "$env:S3ACCESSKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force
+
+    Get-Content -Path "C:\Users\appveyor\AppData\Roaming\s3cmd.ini"
 #    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/Find-InTextFile.ps1 -OutFile $env:TEMP\Find-InTextFile.ps1
 
 #    . $env:TEMP\Find-InTextFile.ps1
@@ -32,7 +34,7 @@ init:
 
 #    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace "$env:S3URL"
 
-#    Get-Content -Path "C:\Users\appveyor\AppData\Roaming\s3cmd.ini"
+#    
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
