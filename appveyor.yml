@@ -9,10 +9,12 @@ init:
 
     Invoke-WebRequest -UseBasicParsing -Uri https://github.com/s3tools/s3cmd/releases/download/v2.2.0/s3cmd-2.2.0.zip -OutFile $env:TEMP\s3cmd-2.2.0.zip
 
-    unzip $env:TEMP\s3cmd-2.2.0.zip C:\Projects
+    unzip $env:TEMP\s3cmd-2.2.0.zip -d C:\Projects
 
     Rename-Item -Path C:\Projects\s3cmd-2.2.0 -NewName s3cmd -Confirm:$false -Force
 
+    'C:\Python310\python.exe -m pip install --upgrade pip'
+    
     pip install python-dateutil
 
     Start-Process -FilePath python -ArgumentList "C:\Projects\s3cmd\setup.py","install" -Wait
