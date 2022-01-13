@@ -23,7 +23,7 @@ init:
 
     Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/s3cmd.ini -OutFile C:\Users\appveyor\AppData\Roaming\s3cmd.ini
 
-#    . $env:TEMP\Find-InTextFile.ps1
+    . "$env:TEMP\Find-InTextFile.ps1"
 
 #    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'UUUUUUUUUUUUUUUUUUU' -Replace $env:S3ACCESSKEY
 
