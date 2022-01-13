@@ -21,26 +21,17 @@ init:
 
     Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/s3cmd.ini -OutFile C:\Users\appveyor\AppData\Roaming\s3cmd.ini
 
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "UUUUUUUUUUUUUUUUUUU", "$env:S3ACCESSKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force
+    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "ACCESS_KEY_GOES_HERE", "$env:S3ACCESSKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force
 
-    Get-Content -Path "C:\Users\appveyor\AppData\Roaming\s3cmd.ini"
-#    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/Find-InTextFile.ps1 -OutFile $env:TEMP\Find-InTextFile.ps1
+    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "SECRET_KEY_GOES_HERE", "$env:S3SECRETKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force
 
-#    . $env:TEMP\Find-InTextFile.ps1
-
-#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini' -Find 'UUUUUUUUUUUUUUUUUUU' -Replace "$env:S3ACCESSKEY"
-
-#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' -Replace "$env:S3SECRETKEY"
-
-#    Find-InTextFile -FilePath 'C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Find 'https://www.com' -Replace "$env:S3URL"
-
-#    
+    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "https://www.com", "$env:S3URL" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force    
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
 build_script:
-- ps: 'Write-Output "Build dir is: $($env:APPVEYOR_BUILD_FOLDER)"'
-#    python C:\Projects\s3cmd-2.2.0\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
+- ps: >-
+    python C:\Projects\s3cmd\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
 test_script:
 - ps: >-
     Write-Output "This is test script"
