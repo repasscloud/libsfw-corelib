@@ -14,17 +14,17 @@ foreach ($json in $JsonFiles)
     
     $instObj = $j.id.installers.$Arch
 
-    Invoke-WebRequest -Uri $instObj.followuri -OutFile $env:TEMP\$instObj.filename
+    "Invoke-WebRequest -Uri $instObj.followuri -OutFile $env:TEMP\$instObj.filename"
 
-    switch ($instObj.type)
-    {
-        'exe'
-        {
-            Start-Process -FilePath $env:TEMP\$instObj.filename -ArgumentList $instObj.switches -Wait
-        }
-        Default
-        {
-            Write-Output "Unknown file type"
-        }
-    }
+    # switch ($instObj.type)
+    # {
+    #     'exe'
+    #     {
+    #         Start-Process -FilePath $env:TEMP\$instObj.filename -ArgumentList $instObj.switches -Wait
+    #     }
+    #     Default
+    #     {
+    #         Write-Output "Unknown file type"
+    #     }
+    # }
 }
