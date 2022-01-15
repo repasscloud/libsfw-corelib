@@ -20,11 +20,11 @@ test_script:
 deploy_script:
 - pwsh: Write-Output "This is deployment script"
 on_success:
-- ps: [System.Console]::WriteLine("Success building")
+- ps: Write-out put "Success building"
 on_failure:
-- ps: '[System.Console]::WriteLine("Project finished building")'
+- ps: Write-Output "Project failed to finish"
 on_finish:
-- ps: '[System.Console]::WriteLine("Project finished building")'
+- ps: Write-Output "Project finished"
 
 # '[System.Console]::WriteLine("Project finished building")'
 # $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
