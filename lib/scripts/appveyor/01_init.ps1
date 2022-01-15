@@ -38,7 +38,8 @@ catch
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) Uninstalling ${app_i}"
 try
 {
-    Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\77.0.3865.120\Installer\setup.exe" -ArgumentList "--uninstall","--system-level","--verbose-logging","--force-uninstall" -Wait -ErrorAction Stop
+    #Start-Process -FilePath "C:\Program Files (x86)\Google\Chrome\Application\77.0.3865.120\Installer\setup.exe" -ArgumentList "--uninstall","--system-level","--verbose-logging","--force-uninstall" -Wait -ErrorAction Stop
+    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait
     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${app_i} removed"
 }
 catch
@@ -67,7 +68,8 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) Uninstalling ${app_i
 Write-Output "$($Env:STRING_OF_TEXT)"
 try
 {
-    Start-Process -FilePath "C:\Program Files (x86)\Mozilla Firefox\uninstall\helper.exe" -ArgumentList "-ms" -Wait -ErrorAction Stop
+    Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
+    #Start-Process -FilePath "C:\Program Files (x86)\Mozilla Firefox\uninstall\helper.exe" -ArgumentList "-ms" -Wait -ErrorAction Stop
     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${app_i} removed"
 }
 catch
