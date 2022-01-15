@@ -49,9 +49,11 @@ $d.meta.summary = ""
 $d.meta.version = ""
 
 <# META EDITS - UPDATE AS REQUIRED #>
-$d.meta.rebootrequired = "Yes"       # 'YES' or 'NO' only
+$d.meta.rebootrequired = "No"        # 'YES' or 'NO' only
 $d.meta.depends = "None"             # Any depedencies
-$d.meta.category = "browser"    # Category name in lower case only
+$d.meta.category = "browser"         # Category name in lower case only
+$d.meta.xft = 'mc'
+$d.meta.locale = 'au-syd1-07'
 
 $d.id.name = "Firefox"
 $d.id.publisher = "Mozilla"
@@ -63,12 +65,12 @@ $d.installer.type = "exe"
 $d.installer.filename = "Firefox Setup " + $d.id.version + ".exe"
 $d.installer.sha256 = ""
 $d.installer.followuri = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"
-$d.installer.switches = "-ms"  #used for backwards compatability
+$d.installer.switches = "-ms"       # used for backwards compatability
 $d.installer.displayname = ""       # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
 $d.installer.uninstallstring = ""
-$d.installer.path = "ftp://localhost/apps/" + $d.id.publisher.ToLower().Replace(' ','_') + "/" + $d.id.name.ToLower().Replace(' ','_') + "/" + $d.id.version + "/" + $d.id.arch + "/"
+$d.installer.path = $d.id.publisher + '/' + $d.id.name + '/' + $d.id.version + '/' + $d.id.arch + '/' + $d.installer.filename
 
 <# UID ISO:1005 #>
 $d.id.uid = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','') + '-' + $d.id.version + '-' + $d.id.arch + '-' + $d.installer.type
@@ -79,7 +81,7 @@ $d.sysinfo = "4.3.8.10C"
 [System.String]$app_version = $d.id.version
 [System.String]$app_arch = $d.id.arch
 [System.String]$app_exectype = $d.installer.type
-[System.String]$data_path = Join-Path -Path $(Split-Path -Path $(Split-Path -Path $PSScriptRoot -Parent) -Parent) -ChildPath "data"
+[System.String]$data_path = Join-Path -Path $(Split-Path -Path $pwd.Path -Parent) -ChildPath 'json'
 $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${app_version}-${app_arch}-${app_exectype}.json" -Encoding utf8 -Force -Confirm:$false
 <# DO NOT EDIT ABOVE THIS LINE #>
 
