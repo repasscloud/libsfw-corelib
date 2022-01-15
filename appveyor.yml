@@ -20,7 +20,7 @@ test_script:
 deploy_script:
 - pwsh: Write-Output "This is deployment script"
 on_success:
-- ps: '[System.Console]::WriteLine("Success building")'
+- ps: [System.Console]::WriteLine("Success building")
 on_failure:
 - ps: '[System.Console]::WriteLine("Project finished building")'
 on_finish:
