@@ -16,8 +16,12 @@ foreach ($json in $JsonFiles)
     [System.String]$FollowUri = $instObj.followuri
     [System.String]$OutFile = $env:TEMP + '\' + $instObj.filename
     
-    Invoke-WebRequest -Uri $FollowUri -OutFile $OutFile
-
+    $userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
+    $wc = New-Object System.Net.WebClient
+    $wc.Headers.Add("user-agent", $userAgent)
+    $wc.DownloadFile($j.meta.xml, "${dls}\nuspec.xml")
+    $wc.Dispose()
+    
     # switch ($instObj.type)
     # {
     #     'exe'

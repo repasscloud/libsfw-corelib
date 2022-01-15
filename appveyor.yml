@@ -3,18 +3,6 @@ shallow_clone: true
 clone_folder: C:\Projects\libsfw
 init:
 - ps: >-
-    Start-process -FilePath msiexec -ArgumentList '/X','{177B605A-B1E1-3197-B5D4-05F00C0174D1}','/q' -Wait;
-
-    Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
-
-    Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/mc/config.json -OutFile C:\Users\appveyor\AppData\Roaming\mc-config.json
-
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_ACCESS_KEY", "$env:AU_SYD1_07_AK" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
-
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_SECRET_KEY", "$env:AU_SYD1_07_SK" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
-
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_URL", "$env:AU_SYD1_07_URI" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force    
-
     docker login -u $env:DCKR_USR -p $env:DCKR_PASS
     
     #Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
@@ -22,10 +10,10 @@ init:
     #docker pull minio/mc
 install:
 - ps: >-
-    Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
+    . .\lib\scripts\appveyor\01_init.ps1
 build_script:
 - ps: >-
-    . .\build.ps1
+    . .\lib\scripts\appveyor\02_build.ps1
 test_script:
 - ps: >-
     Write-Output "This is test script"
@@ -34,8 +22,9 @@ deploy_script:
 on_success:
 - ps: '[System.Console]::WriteLine("Success building")'
 on_failure:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: '[System.Console]::WriteLine("Project finished building")'
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: '[System.Console]::WriteLine("Project finished building")'
 
 # '[System.Console]::WriteLine("Project finished building")'
+# $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
