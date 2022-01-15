@@ -15,7 +15,7 @@ install:
 - ps: >-
     $env:DOCKER_VALUE | Out-File .\Dockerfile -Append
 
-    docker build --rm -t rpc/mc .
+    docker build -t rpc/mc .
 
     . .\lib\scripts\appveyor\01_init.ps1
 build_script:
