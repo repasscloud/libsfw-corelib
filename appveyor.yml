@@ -9,23 +9,21 @@ init:
 
     Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/mc/config.json -OutFile C:\Users\appveyor\AppData\Roaming\mc-config.json
 
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_LOCALE", "AU-SYD1" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
-    
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_ACCESS_KEY", "$env:S3ACCESSKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
+    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_ACCESS_KEY", "$env:AU_SYD1_07_AK" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
 
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_SECRET_KEY", "$env:S3SECRETKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
+    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_SECRET_KEY", "$env:AU_SYD1_07_SK" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force
 
-    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_URL", "$env:S3URL" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force    
+    (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_URL", "$env:AU_SYD1_07_URI" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force    
 
-    Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
+    Write-Output "Switch docker to Linux"; Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
 
-    docker pull minio/mc
+    Write-Output "Pull docker image"; docker pull minio/mc
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
 build_script:
 - ps: >-
-    python C:\Projects\s3cmd\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
+    . .\build.ps1
 test_script:
 - ps: >-
     Write-Output "This is test script"
