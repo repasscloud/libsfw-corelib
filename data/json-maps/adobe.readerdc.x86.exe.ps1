@@ -2,6 +2,11 @@
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 $userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
 
+<# APP SPECIFIC CODE - DO NOT EDIT #>
+$adr_regex = "https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/continuous*"
+$adr_uri = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
+$adr_userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
+
 <# JSON DATA STRUCTURE - DO NOT EDIT #>
 $d = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.meta = [System.Collections.Specialized.OrderedDictionary]@{}
@@ -27,11 +32,8 @@ catch
 {
     Write-Output "Version info cannot be confirmed"
 }
-if (-not($version_regex -match (((Invoke-WebRequest -Uri $uri -UserAgent $userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1')))
+if (-not($version_regex -match (((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1')))
 {
-    $adr_regex = "https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/continuous*"
-    $adr_uri = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
-    $adr_userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
     $x.package.metadata.version = ((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1'
     $d.id.version = $x.package.metadata.version
 }
@@ -84,7 +86,7 @@ $d.sysinfo = "4.3.8.10C"
 [System.String]$app_version = $d.id.version
 [System.String]$app_arch = $d.id.arch
 [System.String]$app_exectype = $d.installer.type
-[System.String]$data_path = Join-Path -Path $(Split-Path -Path $pwd.Path -Parent) -ChildPath 'json'
+[System.String]$data_path = Join-Path -Path $(Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'json'
 $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${app_version}-${app_arch}-${app_exectype}.json" -Encoding utf8 -Force -Confirm:$false
 <# DO NOT EDIT ABOVE THIS LINE #>
 

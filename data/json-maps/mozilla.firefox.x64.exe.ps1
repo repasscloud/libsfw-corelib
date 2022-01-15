@@ -2,6 +2,9 @@
 [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
 $userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
 
+<# APP SPECIFIC CODE - DO NOT EDIT #>
+# no code
+
 <# JSON DATA STRUCTURE - DO NOT EDIT #>
 $d = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.meta = [System.Collections.Specialized.OrderedDictionary]@{}
@@ -81,7 +84,7 @@ $d.sysinfo = "4.3.8.10C"
 [System.String]$app_version = $d.id.version
 [System.String]$app_arch = $d.id.arch
 [System.String]$app_exectype = $d.installer.type
-[System.String]$data_path = Join-Path -Path $(Split-Path -Path $pwd.Path -Parent) -ChildPath 'json'
+[System.String]$data_path = Join-Path -Path $(Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'json'
 $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${app_version}-${app_arch}-${app_exectype}.json" -Encoding utf8 -Force -Confirm:$false
 <# DO NOT EDIT ABOVE THIS LINE #>
 
