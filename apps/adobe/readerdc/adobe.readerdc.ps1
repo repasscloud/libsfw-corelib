@@ -16,6 +16,8 @@ $d.id.version = ((Invoke-WebRequest -Uri $uri -UserAgent $userAgent -UseBasicPar
 $d.id.publisher = "Adobe"
 $d.id.arch = @("x86")
 $d.id.uid = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','') + '-' + $d.id.version
+$d.id.xft = 'mc'
+$d.id.locale = 'au-syd1-07'
 
 $d.id.installers.x86.app = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','')
 $d.id.installers.x86.type = "exe"
@@ -27,10 +29,8 @@ $d.id.installers.x86.displayname = ""
 $d.id.installers.x86.displayversion = ""
 $d.id.installers.x86.publisher = ""
 $d.id.installers.x86.uninstallstring = ""
-$d.id.installers.x86.path = "ftp://localhost/apps/" + $d.id.publisher.ToLower() +"/" + $d.id.name.ToLower() + "/" + $d.id.version + "/x86/" + $d.id.installers.x86.filename
+$d.id.installers.x86.path =  $d.id.locale.ToLower() + '/' + $d.id.publisher.ToLower() + '/' + $d.id.name.ToLower() + '/' + $d.id.version + '/' + $d.id.arch + '/' + $d.id.installers.x86.filename
 
 [System.String]$app_name = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','')
 
 $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${PSScriptRoot}\${app_name}.latest.json" -Encoding utf8 -Force -Confirm:$false
-
-#https://get.adobe.com/reader/completion/?installer=Reader_DC_2021.005.20060_MUI_for_Windows&stype=7659&direct=true&standalone=1
