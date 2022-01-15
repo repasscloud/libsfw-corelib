@@ -68,7 +68,7 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) Uninstalling ${app_i
 try
 {
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
-    #Start-Process -FilePath "C:\Program Files (x86)\Mozilla Firefox\uninstall\helper.exe" -ArgumentList "-ms" -Wait -ErrorAction Stop
+    Start-Process -FilePath "C:\Program Files\Mozilla Firefox\uninstall\helper.exe" -ArgumentList "-ms" -Wait -ErrorAction Stop
     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${app_i} removed"
 }
 catch
