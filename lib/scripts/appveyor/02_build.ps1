@@ -3,7 +3,7 @@
 [System.String]$jsonMaps = Join-Path -Path $rootPath -ChildPath "data\json-maps"
 
 # notice
-Write-output "Building JSON Library Files"
+Write-output "-> Building JSON Library Files"
 
 # build all json maps
 Get-ChildItem -Path $jsonMaps -Filter "*.ps1" | ForEach-Object {
@@ -13,5 +13,5 @@ Get-ChildItem -Path $jsonMaps -Filter "*.ps1" | ForEach-Object {
 }
 
 # notepad++ for testing
-Invoke-WebRequest -UseBasicParsing -Uri https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.2/npp.8.2.Installer.x64.exe -OutFile $env:TMP\npp.exe
+Invoke-WebRequest -Uri https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.2/npp.8.2.Installer.x64.exe -OutFile $env:TMP\npp.exe
 Start-Process -FilePath $env:TMP\npp.exe -ArgumentList '/S' -Wait

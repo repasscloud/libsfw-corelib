@@ -12,7 +12,7 @@ install:
 - ps: >-
     . .\lib\scripts\appveyor\01_init.ps1
 build_script:
-- ps: >-
+- pwsh: >-
     . .\lib\scripts\appveyor\02_build.ps1
 test_script:
 - ps: >-
@@ -22,7 +22,7 @@ deploy_script:
 on_success:
 - ps: Write-Output "Success building"
 on_failure:
-- ps: Write-Output "Project failed to finish"
+- ps: Get-Content -Path C:\Projects\libsfw\data\json\mozilla*.json
 on_finish:
 - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
