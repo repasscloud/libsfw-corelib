@@ -14,4 +14,4 @@ Get-ChildItem -Path $jsonMaps -Filter "*.ps1" | ForEach-Object {
 
 # notepad++ for testing
 Invoke-WebRequest -Uri https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.2/npp.8.2.Installer.x64.exe -OutFile $env:TMP\npp.exe
-Start-Process -FilePath $env:TMP\npp.exe -ArgumentList '/S' -Wait
+#Start-Process -FilePath $env:TMP\npp.exe -ArgumentList '/S' -Wait
