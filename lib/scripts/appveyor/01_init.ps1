@@ -65,7 +65,6 @@ catch
 # uninstall Mozilla Firefox
 [System.String]$app_i = "Mozilla Firefox"
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) Uninstalling ${app_i}"
-Write-Output "$($Env:STRING_OF_TEXT)"
 try
 {
     Start-Process -FilePath "C:\Program Files (x86)\Mozilla Maintenance Service\uninstall.exe" -ArgumentList '/S' -Wait
