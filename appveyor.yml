@@ -20,7 +20,7 @@ test_script:
 deploy_script:
 - pwsh: Write-Output "This is deployment script"
 on_success:
-- ps: Write-out put "Success building"
+- ps: Write-Output "Success building"
 on_failure:
 - ps: Write-Output "Project failed to finish"
 on_finish:
