@@ -26,9 +26,13 @@ init:
     (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "SECRET_KEY_GOES_HERE", "$env:S3SECRETKEY" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force
 
     (Get-Content -Path C:\Users\appveyor\AppData\Roaming\s3cmd.ini) -replace "https://www.com", "$env:S3URL" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\s3cmd.ini -Force    
+
+    Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
+
+    docker images
 build_script:
 - ps: >-
     python C:\Projects\s3cmd\s3cmd put C:\Projects\libsfw\apps\adobe\readerdc\adobe.readerdc.latest.json s3://usrdata-01/adobe/readerdc/adobe.readerdc.latest.json
