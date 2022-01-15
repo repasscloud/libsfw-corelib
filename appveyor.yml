@@ -15,9 +15,9 @@ init:
 
     (Get-Content -Path C:\Users\appveyor\AppData\Roaming\mc-config.json) -replace "MC_URL", "$env:AU_SYD1_07_URI" | Out-File -FilePath C:\Users\appveyor\AppData\Roaming\mc-config.json -Force    
 
-    Write-Output "Switch docker to Linux"; Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
+    #Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
 
-    Write-Output "Pull docker image"; docker pull minio/mc
+    #docker pull minio/mc
 install:
 - ps: >-
     Get-ChildItem -Path .\apps -Recurse -Filter "*.ps1" | ForEach-Object { . $_.FullName }
