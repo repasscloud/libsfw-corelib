@@ -3,7 +3,7 @@ shallow_clone: true
 clone_folder: C:\Projects\libsfw
 init:
 - ps: >-
-    docker login -u $env:DCKR_USR -p $env:DCKR_PASS
+    echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
     
     #Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
 
