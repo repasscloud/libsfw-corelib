@@ -8,7 +8,7 @@ init:
 - ps: >-
     echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
     
-    #Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
+    Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
 
     #docker pull minio/mc
 install:
