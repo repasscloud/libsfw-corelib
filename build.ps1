@@ -13,8 +13,10 @@ foreach ($json in $JsonFiles)
     [System.String]$Arch = $j.id.arch
     
     $instObj = $j.id.installers.$Arch
-
-    "Invoke-WebRequest -Uri $instObj.followuri -OutFile $env:TEMP\$instObj.filename"
+    [System.String]$FollowUri = $instObj.followuri
+    [System.String]$OutFile = $env:TEMP + '\' + $instObj.filename
+    
+    Invoke-WebRequest -Uri $FollowUri -OutFile $OutFile
 
     # switch ($instObj.type)
     # {
