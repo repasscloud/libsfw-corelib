@@ -1,6 +1,9 @@
 version: 1.0.{build}
 shallow_clone: true
 clone_folder: C:\Projects\libsfw
+environment:
+  DOCKER_VALUE:
+    secure: rQZG2K6R7dLydVbRZ/a4dcv8+oHfsz/O1N7/BsDqEiJqayvJqi3Z0jrLOxKmWObCISlLORiSN81oux7Bf9dFUN2ImvnvxvfoZNJgHMABKh1l0m5MoW6VTs2gKLNxGCQgyOzu6JA5l1xhA4ZGAhsp6fdn6UhRf3rKRveD7dxENp3jFaK7n0Bn6d6/kZDvcMYGNw/J5tiHI0yetr/hgo+7cQ==
 init:
 - ps: >-
     echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
@@ -10,21 +13,25 @@ init:
     #docker pull minio/mc
 install:
 - ps: >-
+    $env:DOCKER_VALUE | Out-File .\Dockerfile -Append
+
+    docker build --rm -t rpc/mc .
+
     . .\lib\scripts\appveyor\01_init.ps1
 build_script:
-- pwsh: >-
+- ps: >-
     . .\lib\scripts\appveyor\02_build.ps1
 test_script:
 - ps: >-
     Write-Output "This is test script"
 deploy_script:
-- pwsh: Write-Output "This is deployment script"
+- ps: Write-Output "This is deployment script"
 on_success:
 - ps: Write-Output "Success building"
 on_failure:
 - ps: Get-Content -Path C:\Projects\libsfw\data\json\mozilla*.json
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: Write-Output "Project finished"
 
 # Write-Output "Project finished"
 # $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
