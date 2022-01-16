@@ -78,7 +78,8 @@ $d.installer.displayname = ""       # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
 $d.installer.uninstallstring = ""
-$d.installer.path = $d.id.publisher + '/' + $d.id.name + '/' + $d.id.version + '/' + $d.id.arch + '/' + $d.installer.filename
+$d.installer.path = 'apps' + '/' + $d.id.publisher + '/' + $d.id.name + '/' + $d.id.version + '/' + $d.id.arch + '/' + $d.installer.filename
+$d.installer.s3repo = 'au-syd1-07'
 
 <# UID ISO:1005 #>
 $d.id.uid = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','') + '-' + $d.id.version + '-' + $d.id.arch + '-' + $d.installer.type

@@ -120,6 +120,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$uninstallstring = $j.installer.uninstallstring
     [System.String]$uninstallStringVerbose = $j.installer.uninstallstring
     [System.String]$path = $j.installer.path
+    [System.String]$s3repo = $j.installer.s3repo
 
     # locale to download the installer to
     [System.String]$download_path = Join-Path -Path $dls -ChildPath $filename
@@ -313,12 +314,12 @@ foreach ($jsonFile in $jsonFiles)
     # upload to S3
     try
     {
-        Start-Process -FilePath mc -ArgumentList "mb","au-syd1-07/${publisher}" -Wait -ErrorAction Stop
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) BUCKET CREATED: au-syd1-07/${publisher}"
+        Start-Process -FilePath mc -ArgumentList "mb","${s3repo}/apps" -Wait -ErrorAction Stop
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) BUCKET CREATED: ${s3repo}/apps"
     }
     catch
     {
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUCKET EXISTS: au-syd1-07/${publisher}"
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUCKET EXISTS: ${s3repo}/apps"
     }
     Start-Process -FilePath mc -ArgumentList "cp","${download_path}","${path}" -Wait -ErrorAction Stop
 }
