@@ -215,8 +215,6 @@ foreach ($jsonFile in $jsonFiles)
         }
     }
 
-    $reg_src
-
     #$reg_src  #this prints the registry information to the screen
     if ($reg_src)
     {
@@ -277,8 +275,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$detect_method = "registry"
 
     # set detect value
-    #[System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
-    $reg_src
+    [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
 
     <# VERBOSE TEST #>
     "--uid $uid --key $app --latest --publisher $publisher --name $name --version $version " +
@@ -291,19 +288,19 @@ foreach ($jsonFile in $jsonFiles)
     <# END VERBOSE TEST #>
 
     # uninstall application
-    switch ($installer_class)
-    {
-        'msi' {
-            $uarg =  $uninstallstring.Replace('MsiExec.exe /I','').Replace('MsiExec.exe /X','') 
-            try {
-                Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/qn' -Wait -ErrorAction Stop
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
-            }
-            catch {
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
-            }
-        }
-    }
+    # switch ($installer_class)
+    # {
+    #     'msi' {
+    #         $uarg =  $uninstallstring.Replace('MsiExec.exe /I','').Replace('MsiExec.exe /X','') 
+    #         try {
+    #             Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/qn' -Wait -ErrorAction Stop
+    #             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+    #         }
+    #         catch {
+    #             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
+    #         }
+    #     }
+    # }
 
     # # verify uninstalled
     # if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
