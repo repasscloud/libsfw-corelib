@@ -77,7 +77,8 @@ foreach ($jsonFile in $jsonFiles)
             [System.String]$summary = $j.meta.summary
         }
     }
-    else {
+    else
+    {
         # meta data
         [System.String]$homepage = $j.meta.homepage
         [System.String]$icon = $j.meta.iconuri
@@ -211,9 +212,11 @@ foreach ($jsonFile in $jsonFiles)
     {
         if ($old -notcontains $i)
         {
-            [System.String]$reg_src = $i
+            [System.String]$reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i}
         }
-    } 
+    }
+
+    $reg_src
 
     #$reg_src  #this prints the registry information to the screen
     if ($reg_src)
