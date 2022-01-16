@@ -170,6 +170,7 @@ foreach ($jsonFile in $jsonFiles)
             {
                 Start-Process -FilePath $download_path -ArgumentList $switches -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLED ${app} SUCCESSFULLY"
+                Start-Sleep -Seconds 3
             }
             catch
             {
@@ -185,6 +186,7 @@ foreach ($jsonFile in $jsonFiles)
             {
                 Start-Process -FilePath msiexec -ArgumentList "/i ${download_path} ${switches}" -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${app} INSTALLED SUCCESSFULLY"
+                Start-Sleep -Seconds 3
             }
             catch
             {
@@ -223,26 +225,31 @@ foreach ($jsonFile in $jsonFiles)
             {$_ -match 'MsiExec.exe /[IX]{[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}}'}
             {
                 [System.String]$uninstaller_class = "msi"
+                Write-Output "Uninstaller Type: MSI"
             }
             # inno installer
             {$_ -match '^".*unins[0-9]{3}\.exe"$'}
             {
                 [System.String]$uninstaller_class = "inno"
+                Write-Output "Uninstaller Type: INNO"
             }
             # inno installer 2
             {$_ -match '^.*unins[0-9]{3}\.exe$'}
             {
                 [System.String]$uninstaller_class = "inno"
+                Write-Output "Uninstaller Type: INNO"
             }
             # std installer
             {$_ -match '^.*\.exe$'}
             {
                 [System.String]$uninstaller_class = "exe"
+                Write-Output "Uninstaller Type: EXE"
             }
             # unknown installer
             Default
             {
                 [System.String]$uninstaller_class = "other"
+                Write-Output "Uninstaller Type: OTHER"
                 # have not found what 'ClickOnce' is represented by yet, may need to move this to the json file
             }
         }
