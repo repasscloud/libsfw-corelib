@@ -6,16 +6,18 @@ environment:
     secure: rQZG2K6R7dLydVbRZ/a4dcv8+oHfsz/O1N7/BsDqEiJqayvJqi3Z0jrLOxKmWObCISlLORiSN81oux7Bf9dFUN2ImvnvxvfoZNJgHMABKh1l0m5MoW6VTs2gKLNxGCQgyOzu6JA5l1xhA4ZGAhsp6fdn6UhRf3rKRveD7dxENp3jFaK7n0Bn6d6/kZDvcMYGNw/J5tiHI0yetr/hgo+7cQ==
 init:
 - ps: >-
-    echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
+    #echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
     
-    Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
+    #Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
 
     #docker pull minio/mc
+
+    Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile $env:TMP\mc.exe -UseBasicParsing
 install:
 - ps: >-
-    $env:DOCKER_VALUE | Out-File .\Dockerfile -Append
+    #$env:DOCKER_VALUE | Out-File .\Dockerfile -Append
 
-    docker build -t rpc/mc .
+    #docker build -t rpc/mc .
 
     . .\lib\scripts\appveyor\01_init.ps1
 build_script:
@@ -31,7 +33,7 @@ on_success:
 on_failure:
 - ps: Get-Content -Path C:\Projects\libsfw\data\json\mozilla*.json
 on_finish:
-- ps: Write-Output "Project finished"
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 # Write-Output "Project finished"
 # $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
