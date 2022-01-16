@@ -293,15 +293,21 @@ foreach ($jsonFile in $jsonFiles)
     {
         'msi' {
             $uarg =  $uninstallstring.Replace('MsiExec.exe /I','').Replace('MsiExec.exe /X','') 
-            Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/qn' -Wait
+            try {
+                Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/qn' -Wait -ErrorAction Stop
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+            }
+            catch {
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
+            }
         }
     }
 
-    # verify uninstalled
-    if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
-    {
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
-    } else {
-        Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}
-    }
+    # # verify uninstalled
+    # if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
+    # {
+    #     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+    # } else {
+    #     Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}
+    # }
 }
