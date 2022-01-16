@@ -140,63 +140,67 @@ foreach ($jsonFile in $jsonFiles)
         Write-Output "$([char]::ConvertFromUTF32("0x1F7E0")) APPLICATION NAME: ${app}"
         continue   #ref: https://stackoverflow.com/a/654126/15157918
     }
-}
-#     # what is the file hash?
-#     [System.String]$shahash = (Get-FileHash -Path $download_path -Algorithm SHA256).Hash
-#     if ($sha256 -ne ""-and $shahash -eq $sha256)
-#     {
-#         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) VERIFIED SHA256 PROVIDED: ${shahash}"
-#     }
-#     elseif ($sha256 -ne "" -and $shahash -ne $sha256)
-#     {
-#         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) SHA256 PROVIDED NOT MATCHED"
-#         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) SHA256 UPDATED: ${shahash}"
-#     }
-#     else
-#     {
-#         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) VERIFIED SHA256: ${shahash}"
-#     }
 
-#     # install application to get other info
-#     switch ($type)
-#     {
-#         "exe"
-#         {
-#             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLER TYPE: ${type}"
-#             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLING APPLICATION: ${app}"
-#             try
-#             {
-#                 Start-Process -FilePath $download_path -ArgumentList $switches -Wait -ErrorAction Stop
-#                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLED ${app} SUCCESSFULLY"
-#             }
-#             catch
-#             {
-#                 Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${app} NOT INSTALLED"
-#                 exit 1
-#             }
-#         }
-#         "msi"
-#         {
-#             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLER TYPE: ${type}"
-#             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLING APPLICATION: ${app}"
-#             try
-#             {
-#                 Start-Process -FilePath msiexec -ArgumentList "/i ${download_path} ${switches}" -Wait -ErrorAction Stop
-#                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${app} INSTALLED SUCCESSFULLY"
-#             }
-#             catch
-#             {
-#                 Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${app} NOT INSTALLED"
-#                 exit 1
-#             }
-#         }
-#         Default
-#         {
-#             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) INSTALLER TYPE: $UNKNOWN"
-#             Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${app} NOT INSTALLED"
-#             exit 1
-#         }
-#     }
+    # what is the file hash?
+    [System.String]$shahash = (Get-FileHash -Path $download_path -Algorithm SHA256).Hash
+    if ($sha256 -ne ""-and $shahash -eq $sha256)
+    {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) VERIFIED SHA256 PROVIDED: ${shahash}"
+    }
+    elseif ($sha256 -ne "" -and $shahash -ne $sha256)
+    {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) SHA256 PROVIDED NOT MATCHED"
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) SHA256 UPDATED: ${shahash}"
+    }
+    else
+    {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) VERIFIED SHA256: ${shahash}"
+    }
+
+    # install application to get other info
+    switch ($type)
+    {
+        "exe"
+        {
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLER TYPE: ${type}"
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLING APPLICATION: ${app}"
+            try
+            {
+                Start-Process -FilePath $download_path -ArgumentList $switches -Wait -ErrorAction Stop
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLED ${app} SUCCESSFULLY"
+            }
+            catch
+            {
+                Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${app} NOT INSTALLED"
+                exit 1
+            }
+        }
+        "msi"
+        {
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLER TYPE: ${type}"
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLING APPLICATION: ${app}"
+            try
+            {
+                Start-Process -FilePath msiexec -ArgumentList "/i ${download_path} ${switches}" -Wait -ErrorAction Stop
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${app} INSTALLED SUCCESSFULLY"
+            }
+            catch
+            {
+                Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${app} NOT INSTALLED"
+                exit 1
+            }
+        }
+        Default
+        {
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) INSTALLER TYPE: $UNKNOWN"
+            Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${app} NOT INSTALLED"
+            exit 1
+        }
+    }
+
+
+}
+
 
 #     # print installer information
 #     $installed_apps = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName} | Select-Object -ExpandProperty DisplayName
