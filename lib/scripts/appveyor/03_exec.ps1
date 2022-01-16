@@ -33,79 +33,81 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) TLS VERSION: $([Syst
 # list of json files
 [System.Array]$jsonFiles = Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -Recurse | Select-Object -ExpandProperty FullName
 
-$jsonFiles
+foreach ($jsonFile in $jsonFiles)
+{
+    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) USING JSON FILE: ${jsonFile}"
 
-# foreach ($jsonFile in $jsonFiles)
-# {
-#     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) USING JSON FILE: ${jsonFile}"
+    # convert all data to object $j
+    $j = Get-Content -Path $jsonFile | ConvertFrom-Json
 
-#     # convert all data to object $j
-#     $j = Get-Content -Path $jsonFile | ConvertFrom-Json
+    #region xml data ingest
+    if ($j.meta.xml -ne '')
+    {
+        $wc = New-Object System.Net.WebClient
+        $wc.Headers.Add("user-agent", $userAgent)
+        if (Test-Path -Path "${dls}\nuspec.xml") { Remove-Item -Path "${dls}\nuspec.xml" -Confirm:$false -Force }
 
-#     if ($j.meta.xml -ne "")
-#     {
-#         $wc = New-Object System.Net.WebClient
-#         $wc.Headers.Add("user-agent", $userAgent)
-#         if (Test-Path -Path "${dls}\nuspec.xml") { Remove-Item -Path "${dls}\nuspec.xml" -Confirm:$false -Force }
-#         try
-#         {
-#             $wc.DownloadFile($j.meta.xml, "${dls}\nuspec.xml")
-#             $wc.Dispose()
+        try {
+            $wc.DownloadFile($j.meta.xml, "${dls}\nuspec.xml")
+            $wc.Dispose()
 
-#             [xml]$x = Get-Content -Path "${dls}\nuspec.xml"
+            [xml]$x = Get-Content -Path "${dls}\nuspec.xml"
 
-#             # meta data
-#             [System.String]$homepage = $x.package.metadata.projectUrl
-#             [System.String]$icon = $x.package.metadata.iconUrl
-#             [System.String]$copyright = $x.package.metadata.copyright
-#             [System.String]$license = $x.package.metadata.licenseUrl
-#             [System.String]$docs = $x.package.metadata.docsUrl
-#             [System.String]$tags = $x.package.metadata.tags
-#             [System.String]$summary = $x.package.metadata.summary
-            
-#             Remove-Item -Path "${dls}\nuspec.xml" -Confirm:$false -Force
-#         }
-#         catch
-#         {
-#             $wc.Dispose()
-            
-#             # meta data
-#             [System.String]$homepage = $j.meta.homepage
-#             [System.String]$icon = $j.meta.iconuri
-#             [System.String]$copyright = $x.package.metadata.copyright
-#             [System.String]$license = $j.meta.license
-#             [System.String]$docs = $j.meta.docs
-#             [System.String]$tags = $j.meta.tags
-#             [System.String]$summary = $j.meta.summary
-#         }
-#     }
-#     else
-#     {
-#         # meta data
-#         [System.String]$homepage = $j.meta.homepage
-#         [System.String]$icon = $j.meta.iconuri
-#         [System.String]$copyright = $x.package.metadata.copyright
-#         [System.String]$license = $j.meta.license
-#         [System.String]$docs = $j.meta.docs
-#         [System.String]$tags = $j.meta.tags
-#         [System.String]$summary = $j.meta.summary
-#     }
+            # meta data
+            [System.String]$homepage = $x.package.metadata.projectUrl
+            [System.String]$icon = $x.package.metadata.iconUrl
+            [System.String]$copyright = $x.package.metadata.copyright
+            [System.String]$license = $x.package.metadata.licenseUrl
+            [System.String]$docs = $x.package.metadata.docsUrl
+            [System.String]$tags = $x.package.metadata.tags
+            [System.String]$summary = $x.package.metadata.summary
 
-#     # meta data without prejudice
-#     [System.String]$category = $j.meta.category
-#     [System.String]$rebootrequired = $j.meta.rebootrequired
-#     [System.String]$depends = $j.meta.depends
-#     [System.String]$copyright = $copyright -replace $pattern, ''
-#     [System.String]$copyright = $copyright -replace 'Copyright', "Copyright ${copyrightSymbol}"
-#     [System.String]$copyright = $copyright -replace '  ', ' '
+            Remove-Item -Path "${dls}\nuspec.xml" -Confirm:$false -Force
+        }
+        catch {
+            $wc.Dispose()
 
-#     # identity data
-#     [System.String]$name = $j.id.name
-#     [System.String]$version = $j.id.version
-#     [System.String]$publisher = $j.id.publisher
-#     [System.String]$arch = $j.id.arch
-#     [System.String]$uid = $j.id.uid
-#     [System.String]$lcid = $j.id.lcid
+            # meta data
+            [System.String]$homepage = $j.meta.homepage
+            [System.String]$icon = $j.meta.iconuri
+            [System.String]$copyright = $x.package.metadata.copyright
+            [System.String]$license = $j.meta.license
+            [System.String]$docs = $j.meta.docs
+            [System.String]$tags = $j.meta.tags
+            [System.String]$summary = $j.meta.summary
+        }
+    }
+    else {
+        # meta data
+        [System.String]$homepage = $j.meta.homepage
+        [System.String]$icon = $j.meta.iconuri
+        [System.String]$copyright = $x.package.metadata.copyright
+        [System.String]$license = $j.meta.license
+        [System.String]$docs = $j.meta.docs
+        [System.String]$tags = $j.meta.tags
+        [System.String]$summary = $j.meta.summary
+    }
+    #endregion xml data ingest
+
+    # meta data without prejudice
+    [System.String]$category = $j.meta.category
+    [System.String]$rebootrequired = $j.meta.rebootrequired
+    [System.String]$depends = $j.meta.depends
+    [System.String]$copyright = $copyright -replace $pattern, ''
+    [System.String]$copyright = $copyright -replace 'Copyright', "Copyright ${copyrightSymbol}"
+    [System.String]$copyright = $copyright -replace '  ', ' '
+
+    # identity data
+    [System.String]$name = $j.id.name
+    [System.String]$version = $j.id.version
+    [System.String]$publisher = $j.id.publisher
+    [System.String]$arch = $j.id.arch
+    [System.String]$uid = $j.id.uid
+    [System.String]$lcid = $j.id.lcid
+
+}
+
+
 
 #     # installer data
 #     [System.String]$app = $j.installer.app
