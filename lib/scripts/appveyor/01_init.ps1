@@ -84,7 +84,9 @@ catch
 
 # minio/mc configuration
 New-Item -Path C:\mc\bin -ItemType Directory -Force -Confirm:$false
-$env:PATH += ';C:\mc\bin'
+$OLDPATH = [System.Environment]::GetEnvironmentVariable('PATH','machine')
+$NEWPATH = "$OLDPATH;C:\mc\bin"
+[Environment]::SetEnvironmentVariable("PATH", "$NEWPATH", "Machine")
 Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile C:\mc\bin\mc.exe -UseBasicParsing
 mc alias set au-syd1-07 $env:MC_URI $env:MC_ACCESS_KEY $env:MC_SECRET_KEY
 [System.Array]$hklmPaths = @(
