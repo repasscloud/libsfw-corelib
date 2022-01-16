@@ -12,7 +12,9 @@ init:
 - ps: >-
     echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
     
-    mkdir -p C:\mc\bin; $env:PATH += ';C:\mc\bin'
+    mkdir -p C:\mc\bin
+    
+    $env:PATH += ';C:\mc\bin'
 
     Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile C:\mc\bin\mc.exe -UseBasicParsing
 
