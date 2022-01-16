@@ -298,8 +298,10 @@ foreach ($jsonFile in $jsonFiles)
     }
 
     # verify uninstalled
-    if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $newly_installed}))
+    if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
     {
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${newly_installed}"
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+    } else {
+        Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}
     }
 }
