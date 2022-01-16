@@ -9,8 +9,7 @@ environment:
   MC_URI:
     secure: ew9e/wrf2ID1kJVMCXZZ6BzhL8884qfKCTNl+j3m1ABpoh1AYEunyrB0yyEsqhYbYzPiQKRvg0SvDx8Gwa5V5A==
 init:
-- ps: >-
-    echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
+- ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
 install:
 - ps: >-
     . .\lib\scripts\appveyor\01_init.ps1
