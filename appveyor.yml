@@ -19,6 +19,14 @@ init:
     Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile C:\mc\bin\mc.exe -UseBasicParsing
 
     mc alias set au-syd1-07 $env:MC_URI $env:MC_ACCESS_KEY $env:MC_SECRET_KEY
+
+    [System.Array]$hklmPaths = @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall","HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")
+
+    Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName} | Export-Csv -Path $env:TMP\app_list.csv -NoTypeInformation
+
+    try { Start-Process -FilePath mc -ArgumentList 'mb','au-syd1-07/lib' -Wait -ErrorAction Stop } catch { 'Bucket exists' }
+
+    mc cp $env:TMP\app_list.csv au-syd1-07/lib/appveyor/app_list.csv
 install:
 - ps: >-
     . .\lib\scripts\appveyor\01_init.ps1
