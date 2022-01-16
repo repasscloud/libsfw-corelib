@@ -224,27 +224,27 @@ foreach ($jsonFile in $jsonFiles)
             # msi/msix
             {$_ -match 'MsiExec.exe /[IX]{[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}}'}
             {
-                [System.String]$installer_class = "msi"
+                [System.String]$uninstaller_class = "msi"
             }
             # inno installer
             {$_ -match '^".*unins[0-9]{3}\.exe"$'}
             {
-                [System.String]$installer_class = "inno"
+                [System.String]$uninstaller_class = "inno"
             }
             # inno installer 2
             {$_ -match '^.*unins[0-9]{3}\.exe$'}
             {
-                [System.String]$installer_class = "inno"
+                [System.String]$uninstaller_class = "inno"
             }
             # std installer
             {$_ -match '^.*\.exe$'}
             {
-                [System.String]$installer_class = "exe"
+                [System.String]$uninstaller_class = "exe"
             }
             # unknown installer
             Default
             {
-                [System.String]$installer_class = "other"
+                [System.String]$uninstaller_class = "other"
                 # have not found what 'ClickOnce' is represented by yet, may need to move this to the json file
             }
         }
@@ -282,31 +282,34 @@ foreach ($jsonFile in $jsonFiles)
             "--category $category --arch $arch --exec-type $type --filename $filename --sha256 $shahash --follow-uri $followuri " +
             "--install-switches $switches --display-name $displayname --display-version $displayversion " +
             "--display-publisher $displaypublisher --uninstall-string $uninstallstring " +
-            "--detect-method $detect_method --detect-value $detect_value --installer-class $installer_class --path $path " +
+            "--detect-method $detect_method --detect-value $detect_value --installer-class $uninstaller_class --path $path " +
             "--homepage $homepage --icon $icon --copyright $copyright --license $license --docs $docs --tags $tags " +
             "--summary $summary --rebootrequired $rebootrequired --depends $depends --lcid $lcid"
     <# END VERBOSE TEST #>
 
     # uninstall application
-    # switch ($installer_class)
-    # {
-    #     'msi' {
-    #         $uarg =  $uninstallstring.Replace('MsiExec.exe /I','').Replace('MsiExec.exe /X','') 
-    #         try {
-    #             Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/qn' -Wait -ErrorAction Stop
-    #             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
-    #         }
-    #         catch {
-    #             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
-    #         }
-    #     }
-    # }
+    switch ($uninstaller_class)
+    {
+        'msi' {
+            if ($uninstallstring -match 'MsiExec.exe /I.*') { $uarg = $uninstallstring.Replace('MsiExecx.exe /I', '') }
+            if ($uninstallstring -match 'MsiExec.exe /X.*') { $uarg = $uninstallstring.Replace('MsiExecx.exe /X', '') }
+            try {
+                Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/q' -Wait -ErrorAction Stop
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+            }
+            catch {
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
+            }
+        }
+    }
 
-    # # verify uninstalled
-    # if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
-    # {
-    #     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
-    # } else {
-    #     Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}
-    # }
+    # verify uninstalled
+    if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
+    {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+    }
+    else
+    {
+        Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}
+    }
 }
