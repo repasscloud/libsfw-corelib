@@ -331,6 +331,6 @@ foreach ($jsonFile in $jsonFiles)
     {
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUCKET EXISTS: ${s3repo}/apps"
     }
-    Start-Process -FilePath mc -ArgumentList "cp","'${download_path}'","'${s3repo}/${path}'" -Wait -ErrorAction Stop
+    mc cp "${download_path}" "${s3repo}/${path}"
     Write-Output "Start-Process -FilePath mc -ArgumentList 'cp','${download_path}','${s3repo}/${path}' -Wait -ErrorAction Stop"
 }
