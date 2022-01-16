@@ -2,13 +2,7 @@
 
 foreach ($json in $JsonFiles)
 {
-    $j = Get-Content -Path $json | ConvertFrom-Json
-
-    [System.String]$Publisher = $j.id.publisher
-    [System.String]$Name = $j.id.name
-    [System.String]$Version = $j.id.version
-
-    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) Testing install for: ${Publisher} ${Name} ${Version}"
+    
 
     [System.String]$Arch = $j.id.arch
     
