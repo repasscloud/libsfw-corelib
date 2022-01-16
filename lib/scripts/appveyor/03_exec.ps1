@@ -275,7 +275,8 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$detect_method = "registry"
 
     # set detect value
-    [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
+    #[System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
+    $reg_src
 
     <# VERBOSE TEST #>
     "--uid $uid --key $app --latest --publisher $publisher --name $name --version $version " +
