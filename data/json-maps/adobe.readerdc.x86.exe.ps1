@@ -32,16 +32,19 @@ catch
 {
     Write-Output "Version info cannot be confirmed"
 }
-if (-not($version_regex -match (((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1')))
+switch($version_regex -match (((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1'))
 {
-    $x.package.metadata.version = ((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1'
-    $d.id.version = $x.package.metadata.version
+    $true {
+        $x.package.metadata.version = ((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1'
+        $d.id.version = $x.package.metadata.version
+    }
+    default {
+        $x.package.metadata.version = $version_regex
+        $d.id.version = $version_regex
+        "default value"
+    }
 }
-else
-{
-    $x.package.metadata.version = $version_regex
-    $d.id.version = $version_regex
-}
+
 
 <# NUSPEC PLACEHOLDER - DO NOT EDIT #>
 $d.meta.homepage = ""

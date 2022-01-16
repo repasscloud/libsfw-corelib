@@ -30,15 +30,17 @@ catch
 {
     Write-Output "Version info cannot be confirmed"
 }
-if (-not($version_regex -match ([System.Net.HttpWebRequest]::Create('https://www.mozilla.org/en-US/firefox/notes/').GetResponse().ResponseUri.AbsoluteUri).Split('/')[5]))
+switch($version_regex -match ([System.Net.HttpWebRequest]::Create('https://www.mozilla.org/en-US/firefox/notes/').GetResponse().ResponseUri.AbsoluteUri).Split('/')[5])
 {
-    $x.package.metadata.version = ([System.Net.HttpWebRequest]::Create('https://www.mozilla.org/en-US/firefox/notes/').GetResponse().ResponseUri.AbsoluteUri).Split('/')[5]
-    $d.id.version = $x.package.metadata.version
-}
-else
-{
-    $x.package.metadata.version = $version_regex
-    $d.id.version = $version_regex
+    $true {
+        $x.package.metadata.version = ([System.Net.HttpWebRequest]::Create('https://www.mozilla.org/en-US/firefox/notes/').GetResponse().ResponseUri.AbsoluteUri).Split('/')[5]
+        $d.id.version = $x.package.metadata.version
+    }
+    default {
+        $x.package.metadata.version = $version_regex
+        $d.id.version = $version_regex
+        "default value"
+    }
 }
 
 <# NUSPEC PLACEHOLDER - DO NOT EDIT #>
