@@ -277,8 +277,8 @@ foreach ($jsonFile in $jsonFiles)
     switch ($uninstaller_class)
     {
         'msi' {
-            if ($uninstallstring -match 'MsiExec.exe /I.*') { 'i'; $uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
-            if ($uninstallstring -match 'MsiExec.exe /X.*') { 'x'; $uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
+            if ($uninstallstring -match 'MsiExec.exe /I.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
+            if ($uninstallstring -match 'MsiExec.exe /X.*') {; $uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
             try {
                 Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/q' -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
