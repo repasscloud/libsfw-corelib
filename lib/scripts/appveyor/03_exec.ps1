@@ -120,7 +120,6 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$uninstallStringVerbose = $j.installer.uninstallstring
     [System.String]$path = $j.installer.path
 
-
     # locale to download the installer to
     [System.String]$download_path = Join-Path -Path $dls -ChildPath $filename
 
@@ -212,7 +211,7 @@ foreach ($jsonFile in $jsonFiles)
     {
         if ($old -notcontains $i)
         {
-            [System.String]$reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i}
+            $reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i} | Select-Object -Property *
         }
     }
 
