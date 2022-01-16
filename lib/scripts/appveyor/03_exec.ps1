@@ -1,9 +1,9 @@
 # global variables
 [System.String]$rootPath = 'C:\Projects\libsfw'
-[System.String]$dataPath = Join-Path -Path $rootPath -ChildPath 'data'
+[System.String]$dataPath = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data'
 [System.String]$dls = Join-Path -Path $dataPath -ChildPath 'downloads'
-[System.String]$dll = Join-Path -Path $rootPath -ChildPath 'DBUtils\UpdateAppsDB.exe'
-[System.String]$cni = Join-Path -Path $rootPath -ChildPath 'GHUtils\NewIssues\CreateNewIssue.exe'
+[System.String]$dll = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\UpdateAppsDB.exe'
+[System.String]$cni = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\CreateNewIssue.exe'
 [System.String]$copyrightSymbol = [System.Char]::convertfromutf32("0x00A9")
 [System.String]$pattern = '[^a-zA-Z0-9\-\ ]'
 [System.Array]$hklmPaths = @(
@@ -199,10 +199,6 @@ foreach ($jsonFile in $jsonFiles)
     }
 
     # generate installed app comparisons
-    [System.Array]$hklmPaths = @(
-        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
-    )
     $old = Import-Csv -Path $env:TMP\app_list.csv | Select-Object -ExpandProperty DisplayName
     $current = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName -and $_.DisplayName -notlike 'Microsoft Azure Libraries for .NET – v2.9'} | Select-Object -ExpandProperty DisplayName
 
@@ -277,22 +273,12 @@ foreach ($jsonFile in $jsonFiles)
     # set detect value
     [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
 
-    <# VERBOSE TEST #>
-    "--uid $uid --key $app --latest --publisher $publisher --name $name --version $version " +
-            "--category $category --arch $arch --exec-type $type --filename $filename --sha256 $shahash --follow-uri $followuri " +
-            "--install-switches $switches --display-name $displayname --display-version $displayversion " +
-            "--display-publisher $displaypublisher --uninstall-string $uninstallstring " +
-            "--detect-method $detect_method --detect-value $detect_value --installer-class $uninstaller_class --path $path " +
-            "--homepage $homepage --icon $icon --copyright $copyright --license $license --docs $docs --tags $tags " +
-            "--summary $summary --rebootrequired $rebootrequired --depends $depends --lcid $lcid"
-    <# END VERBOSE TEST #>
-
     # uninstall application
     switch ($uninstaller_class)
     {
         'msi' {
-            if ($uninstallstring -match 'MsiExec.exe /I.*') { $uarg = $uninstallstring.Replace('MsiExecx.exe /I', '') }
-            if ($uninstallstring -match 'MsiExec.exe /X.*') { $uarg = $uninstallstring.Replace('MsiExecx.exe /X', '') }
+            if ($uninstallstring -match 'MsiExec.exe /I.*') { 'i'; $uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
+            if ($uninstallstring -match 'MsiExec.exe /X.*') { 'x'; $uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
             try {
                 Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/q' -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
@@ -304,12 +290,34 @@ foreach ($jsonFile in $jsonFiles)
     }
 
     # verify uninstalled
-    if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
+    if ($null -notlike (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
     {
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+        Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}        
     }
     else
     {
-        Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
     }
+
+    <# VERBOSE TEST #>
+    "--uid $uid --key $app --latest --publisher $publisher --name $name --version $version " +
+    "--category $category --arch $arch --exec-type $type --filename $filename --sha256 $shahash --follow-uri $followuri " +
+    "--install-switches $switches --display-name $displayname --display-version $displayversion " +
+    "--display-publisher $displaypublisher --uninstall-string $uninstallstring " +
+    "--detect-method $detect_method --detect-value $detect_value --installer-class $uninstaller_class --path $path " +
+    "--homepage $homepage --icon $icon --copyright $copyright --license $license --docs $docs --tags $tags " +
+    "--summary $summary --rebootrequired $rebootrequired --depends $depends --lcid $lcid"
+    <# END VERBOSE TEST #>
+
+    # upload to S3
+    try
+    {
+        Start-Process -FilePath mc -ArgumentList "mb","au-syd1-07/${publisher}" -Wait -ErrorAction Stop
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) BUCKET CREATED: au-syd1-07/${publisher}"
+    }
+    catch
+    {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUCKET EXISTS: au-syd1-07/${publisher}"
+    }
+    Start-Process -FilePath mc -ArgumentList "cp","${download_path}","${path}" -Wait -ErrorAction Stop
 }

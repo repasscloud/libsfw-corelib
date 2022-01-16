@@ -17,7 +17,7 @@ build_script:
 - ps: >-
     . .\lib\scripts\appveyor\02_build.ps1
 
-#    . .\lib\scripts\appveyor\03_exec.ps1
+    . .\lib\scripts\appveyor\03_exec.ps1
 test_script:
 - ps: >-
     Write-Output "This is test script"
