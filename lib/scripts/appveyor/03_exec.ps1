@@ -215,6 +215,8 @@ foreach ($jsonFile in $jsonFiles)
         }
     }
 
+    $reg_src
+
     #$reg_src  #this prints the registry information to the screen
     if ($reg_src)
     {
