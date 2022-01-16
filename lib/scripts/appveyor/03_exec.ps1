@@ -157,7 +157,7 @@ foreach ($jsonFile in $jsonFiles)
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) VERIFIED SHA256: ${shahash}"
     }
 
-    # install application to get other info
+    # install application
     switch ($type)
     {
         "exe"
@@ -198,92 +198,107 @@ foreach ($jsonFile in $jsonFiles)
         }
     }
 
+    # generate installed app comparisons
+    [System.Array]$hklmPaths = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+    $old = Import-Csv -Path $env:TMP\app_list.csv | Select-Object -ExpandProperty DisplayName
+    $current = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName -and $_.DisplayName -notlike 'Microsoft Azure Libraries for .NET – v2.9'} | Select-Object -ExpandProperty DisplayName
 
+    # find newly installed app
+    foreach ($i in $current)
+    {
+        if ($old -notcontains $i)
+        {
+            [System.String]$reg_src = $i
+        }
+    } 
+
+    #$reg_src  #this prints the registry information to the screen
+    if ($reg_src)
+    {
+        # set installer class (this doesn't represent the file type for installing!)
+        switch ($reg_src.UninstallString)
+        {
+            # msi/msix
+            {$_ -match 'MsiExec.exe /[IX]{[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}}'}
+            {
+                [System.String]$installer_class = "msi"
+            }
+            # inno installer
+            {$_ -match '^".*unins[0-9]{3}\.exe"$'}
+            {
+                [System.String]$installer_class = "inno"
+            }
+            # inno installer 2
+            {$_ -match '^.*unins[0-9]{3}\.exe$'}
+            {
+                [System.String]$installer_class = "inno"
+            }
+            # std installer
+            {$_ -match '^.*\.exe$'}
+            {
+                [System.String]$installer_class = "exe"
+            }
+            # unknown installer
+            Default
+            {
+                [System.String]$installer_class = "other"
+                # have not found what 'ClickOnce' is represented by yet, may need to move this to the json file
+            }
+        }
+    }
+
+    # set display name if not passed in
+    if ($displayname.Length -eq 0)
+    {
+        $displayname = $reg_src.DisplayName
+    }
+    # set display version if not passed in
+    if ($displayversion.Length -eq 0)
+    {
+        $displayversion = $reg_src.DisplayVersion
+    }
+    # set display publisher if not passed in
+    if ($displaypublisher.length -eq 0)
+    {
+        $displaypublisher = $reg_src.Publisher
+    }
+    # set uninstall string if not passed in
+    if ($uninstallstring.Length -eq 0)
+    {
+        $uninstallstring = $reg_src.UninstallString
+    }
+
+    # set detection method
+    [System.String]$detect_method = "registry"
+
+    # set detect value
+    [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
+
+    <# VERBOSE TEST #>
+    "--uid $uid --key $app --latest --publisher $publisher --name $name --version $version " +
+            "--category $category --arch $arch --exec-type $type --filename $filename --sha256 $shahash --follow-uri $followuri " +
+            "--install-switches $switches --display-name $displayname --display-version $displayversion " +
+            "--display-publisher $displaypublisher --uninstall-string $uninstallstring " +
+            "--detect-method $detect_method --detect-value $detect_value --installer-class $installer_class --path $path " +
+            "--homepage $homepage --icon $icon --copyright $copyright --license $license --docs $docs --tags $tags " +
+            "--summary $summary --rebootrequired $rebootrequired --depends $depends --lcid $lcid"
+    <# END VERBOSE TEST #>
+
+    # uninstall application
+    switch ($installer_class)
+    {
+        'msi' {
+            $uarg =  $uninstallstring.Replace('MsiExec.exe /I','').Replace('MsiExec.exe /X','') 
+            Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/qn' -Wait
+        }
+    }
+
+    # verify uninstalled
+    if ($null -like (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $newly_installed}))
+    {
+        "OK - Uninstalled ${newly_installed}"
+    }
 }
-
-
-#     # print installer information
-#     $installed_apps = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName} | Select-Object -ExpandProperty DisplayName
-#     $csv_record = Import-Csv -Path $env:TMP\app_list.csv
-
-#     foreach ($i in $installed_apps)
-#     {
-#         if ($i -notin $csv_record.DisplayName)
-#         {
-#             $reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i} | Select-object -Property *
-
-#             #$reg_src  #this prints the registry information to the screen
-#             if ($reg_src)
-#             {
-#                 # set installer class (this doesn't represent the file type for installing!)
-#                 switch ($reg_src.UninstallString)
-#                 {
-#                     # msi/msix
-#                     {$_ -match 'MsiExec.exe /[IX]{[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}}'}
-#                     {
-#                         [System.String]$installer_class = "msi"
-#                     }
-#                     # inno installer
-#                     {$_ -match '^".*unins[0-9]{3}\.exe"$'}
-#                     {
-#                         [System.String]$installer_class = "inno"
-#                     }
-#                     # inno installer 2
-#                     {$_ -match '^.*unins[0-9]{3}\.exe$'}
-#                     {
-#                         [System.String]$installer_class = "inno"
-#                     }
-#                     # std installer
-#                     {$_ -match '^.*\.exe$'}
-#                     {
-#                         [System.String]$installer_class = "exe"
-#                     }
-#                     # unknown installer
-#                     Default
-#                     {
-#                         [System.String]$installer_class = "other"
-#                         # have not found what 'ClickOnce' is represented by yet, may need to move this to the json file
-#                     }
-#                 }
-#             }
-
-#             # set display name if not passed in
-#             if ($displayname.Length -eq 0)
-#             {
-#                 $displayname = $reg_src.DisplayName
-#             }
-#             # set display version if not passed in
-#             if ($displayversion.Length -eq 0)
-#             {
-#                 $displayversion = $reg_src.DisplayVersion
-#             }
-#             # set display publisher if not passed in
-#             if ($displaypublisher.length -eq 0)
-#             {
-#                 $displaypublisher = $reg_src.Publisher
-#             }
-#             # set uninstall string if not passed in
-#             if ($uninstallstring.Length -eq 0)
-#             {
-#                 $uninstallstring = $reg_src.UninstallString
-#             }
-
-#             # set detection method
-#             [System.String]$detect_method = "registry"
-
-#             # set detect value
-#             [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
-
-#             <# VERBOSE TEST #>
-#             "--uid $uid --key $app --latest --publisher $publisher --name $name --version $version " +
-#                     "--category $category --arch $arch --exec-type $type --filename $filename --sha256 $shahash --follow-uri $followuri " +
-#                     "--install-switches $switches --display-name $displayname --display-version $displayversion " +
-#                     "--display-publisher $displaypublisher --uninstall-string $uninstallstring " +
-#                     "--detect-method $detect_method --detect-value $detect_value --installer-class $installer_class --path $path " +
-#                     "--homepage $homepage --icon $icon --copyright $copyright --license $license --docs $docs --tags $tags " +
-#                     "--summary $summary --rebootrequired $rebootrequired --depends $depends --lcid $lcid"
-#             <# END VERBOSE TEST #>
-#         }
-#     }
-# }
-
