@@ -105,45 +105,42 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$uid = $j.id.uid
     [System.String]$lcid = $j.id.lcid
 
+    # installer data
+    [System.String]$app = $j.installer.app
+    [System.String]$type = $j.installer.type
+    [System.String]$filename = $j.installer.filename
+    [System.String]$sha256 = $j.installer.sha256
+    [System.String]$followuri = $j.installer.followuri
+    [System.String]$switches = $j.installer.switches
+    [System.String]$displayname = $j.installer.displayname
+    [System.String]$displayversion = $j.installer.displayversion
+    [System.String]$displaypublisher = $j.installer.publisher
+    [System.String]$uninstallstring = $j.installer.uninstallstring
+    [System.String]$uninstallStringVerbose = $j.installer.uninstallstring
+    [System.String]$path = $j.installer.path
+
+
+    # locale to download the installer to
+    [System.String]$download_path = Join-Path -Path $dls -ChildPath $filename
+
+    # web client and config, download, dispose, voila !@danijeljw-RPC
+    $wc = New-Object System.Net.WebClient
+    $wc.Headers.Add("user-agent", $userAgent)
+    [System.Console]::WriteLine("Downloading file: {0}", $followuri)
+    try
+    {
+        $wc.DownloadFile($followuri, $download_path)
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) FILE DOWNLOADED TO: ${download_path}"
+        $wc.Dispose()
+    }
+    catch
+    {
+        $wc.Dispose()
+        Write-Output "$([char]::ConvertFromUTF32("0x1F534")) DOWNLOAD FAILED FOR FILE: ${followuri}"
+        Write-Output "$([char]::ConvertFromUTF32("0x1F7E0")) APPLICATION NAME: ${app}"
+        continue   #ref: https://stackoverflow.com/a/654126/15157918
+    }
 }
-
-
-
-#     # installer data
-#     [System.String]$app = $j.installer.app
-#     [System.String]$type = $j.installer.type
-#     [System.String]$filename = $j.installer.filename
-#     [System.String]$sha256 = $j.installer.sha256
-#     [System.String]$followuri = $j.installer.followuri
-#     [System.String]$switches = $j.installer.switches
-#     [System.String]$displayname = $j.installer.displayname
-#     [System.String]$displayversion = $j.installer.displayversion
-#     [System.String]$displaypublisher = $j.installer.publisher
-#     [System.String]$uninstallstring = $j.installer.uninstallstring
-#     [System.String]$uninstallStringVerbose = $j.installer.uninstallstring
-#     [System.String]$path = $j.installer.path
-
-#     # locale to download the installer to
-#     [System.String]$download_path = Join-Path -Path $dls -ChildPath $filename
-
-#     # web client and config, download, dispose, voila !@danijeljw-RPC
-#     $wc = New-Object System.Net.WebClient
-#     $wc.Headers.Add("user-agent", $userAgent)
-#     [System.Console]::WriteLine("Downloading file: {0}", $followuri)
-#     try
-#     {
-#         $wc.DownloadFile($followuri, $download_path)
-#         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) FILE DOWNLOADED TO: ${download_path}"
-#         $wc.Dispose()
-#     }
-#     catch
-#     {
-#         $wc.Dispose()
-#         Write-Output "$([char]::ConvertFromUTF32("0x1F534")) DOWNLOAD FAILED FOR FILE: ${followuri}"
-#         Write-Output "$([char]::ConvertFromUTF32("0x1F7E0")) APPLICATION NAME: ${app}"
-#         continue   #ref: https://stackoverflow.com/a/654126/15157918
-#     }
-
 #     # what is the file hash?
 #     [System.String]$shahash = (Get-FileHash -Path $download_path -Algorithm SHA256).Hash
 #     if ($sha256 -ne ""-and $shahash -eq $sha256)
@@ -285,3 +282,4 @@ foreach ($jsonFile in $jsonFiles)
 #         }
 #     }
 # }
+
