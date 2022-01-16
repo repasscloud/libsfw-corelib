@@ -2,23 +2,23 @@ version: 1.0.{build}
 shallow_clone: true
 clone_folder: C:\Projects\libsfw
 environment:
-  DOCKER_VALUE:
-    secure: rQZG2K6R7dLydVbRZ/a4dcv8+oHfsz/O1N7/BsDqEiJqayvJqi3Z0jrLOxKmWObCISlLORiSN81oux7Bf9dFUN2ImvnvxvfoZNJgHMABKh1l0m5MoW6VTs2gKLNxGCQgyOzu6JA5l1xhA4ZGAhsp6fdn6UhRf3rKRveD7dxENp3jFaK7n0Bn6d6/kZDvcMYGNw/J5tiHI0yetr/hgo+7cQ==
+  MC_ACCESS_KEY:
+    secure: CqSOObN1F/aUt+VOcx8g/9EP0b5qvf16joIOZ0eRBjc=
+  MC_SECRET_KEY:
+    secure: ZRkGjWO83vo7CTIOBTq+aG9FsrYCZ9TerlIT2hVme3+ETSIQMqoGalOKw5KNOKKx
+  MC_URI:
+    secure: ew9e/wrf2ID1kJVMCXZZ6BzhL8884qfKCTNl+j3m1ABpoh1AYEunyrB0yyEsqhYbYzPiQKRvg0SvDx8Gwa5V5A==
 init:
 - ps: >-
-    #echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
+    echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
     
-    #Start-Process -FilePath 'C:\Program Files\Docker\Docker\DockerCli.exe' -ArgumentList '-SwitchDaemon' -Wait
+    mkdir -p C:\mc\bin; $env:PATH += ';C:\mc\bin'
 
-    #docker pull minio/mc
+    Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile C:\mc\bin\mc.exe -UseBasicParsing
 
-    Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile $env:TMP\mc.exe -UseBasicParsing
+    mc alias set au-syd1-07 $env:MC_URI $env:MC_ACCESS_KEY $env:MC_SECRET_KEY
 install:
 - ps: >-
-    #$env:DOCKER_VALUE | Out-File .\Dockerfile -Append
-
-    #docker build -t rpc/mc .
-
     . .\lib\scripts\appveyor\01_init.ps1
 build_script:
 - ps: >-
@@ -33,7 +33,7 @@ on_success:
 on_failure:
 - ps: Get-Content -Path C:\Projects\libsfw\data\json\mozilla*.json
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: Write-Output "Project finished"
 
 # Write-Output "Project finished"
 # $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
