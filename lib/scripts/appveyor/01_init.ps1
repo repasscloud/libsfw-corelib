@@ -1,11 +1,3 @@
-# minio/mc config setup
-[System.String]$mcconfig = 'C:\Users\appveyor\AppData\Roaming\mc-config.json'
-Invoke-WebRequest -UseBasicParsing -Uri https://raw.githubusercontent.com/repasscloud/init-files/main/mc/config.json -OutFile $mcconfig
-(Get-Content -Path $mcconfig) -replace "MC_ACCESS_KEY", "$env:AU_SYD1_07_AK" | Out-File -FilePath $mcconfig -Force
-(Get-Content -Path $mcconfig) -replace "MC_SECRET_KEY", "$env:AU_SYD1_07_SK" | Out-File -FilePath $mcconfig -Force
-(Get-Content -Path $mcconfig) -replace "MC_URL", "$env:AU_SYD1_07_URI" | Out-File -FilePath $mcconfig -Force    
-
-
 # uninstall Google update tool
 [System.String]$app_i = "Google Auto Update Tool"
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) Uninstalling ${app_i}"
@@ -88,3 +80,21 @@ catch
         }
     }
 }
+
+
+# minio/mc configuration
+New-Item -Path C:\mc\bin -ItemType Directory -Force -Confirm:$false
+$env:PATH += ';C:\mc\bin'
+Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile C:\mc\bin\mc.exe -UseBasicParsing
+mc alias set au-syd1-07 $env:MC_URI $env:MC_ACCESS_KEY $env:MC_SECRET_KEY
+[System.Array]$hklmPaths = @(
+    "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+    "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+)
+Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName} | Export-Csv -Path $env:TMP\app_list.csv -NoTypeInformation
+try {
+    Start-Process -FilePath mc -ArgumentList 'mb','au-syd1-07/lib' -Wait -ErrorAction Stop
+} catch {
+    'Bucket exists'
+}
+mc cp $env:TMP\app_list.csv au-syd1-07/lib/appveyor/app_list.csv
