@@ -31,7 +31,7 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) USER AGENT: ${userAg
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) TLS VERSION: $([System.Net.SecurityProtocolType]::Tls12)"
 
 # list of json files
-[System.Array]$jsonFiles = Get-ChildItem -Path $dataPath -Filter "*.json" | Select-Object -ExpandProperty FullName
+[System.Array]$jsonFiles = Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -Recurse | Select-Object -ExpandProperty FullName
 
 $jsonFiles
 
