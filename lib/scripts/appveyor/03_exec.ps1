@@ -10,6 +10,7 @@
     'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall',
     'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
 )
+$env:PATH += ';C:\mc\bin'
 
 # which output encoding is being used
 $OutputEncoding = New-Object -TypeName System.Text.UTF8Encoding
