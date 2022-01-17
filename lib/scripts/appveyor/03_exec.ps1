@@ -92,9 +92,9 @@ foreach ($jsonFile in $jsonFiles)
     #endregion xml data ingest
 
     # verify missing data
-    if ($null -eq $copright)
+    if ($null -eq $copyright)
     {
-        $copyright = 'none found'
+        $copyright = $j.meta.copyright
     }
 
     # meta data without prejudice
