@@ -8,11 +8,11 @@ environment:
     secure: ZRkGjWO83vo7CTIOBTq+aG9FsrYCZ9TerlIT2hVme3+ETSIQMqoGalOKw5KNOKKx
   MC_URI:
     secure: ew9e/wrf2ID1kJVMCXZZ6BzhL8884qfKCTNl+j3m1ABpoh1AYEunyrB0yyEsqhYbYzPiQKRvg0SvDx8Gwa5V5A==
-  appsCSHost:
+  APPS_CS_HOST:
     secure: 0LN4yVhDyvjhf/GohIQo2zjlu6HREy0+iPOqv2gpGnf83Fh2aBI2LlLqXha3ZPnn
-  appsCSUsr:
+  APPS_CS_USR:
     secure: QevHdvXjnMiw7RBZY/u+Kg==
-  appsCSPK:
+  APPS_CS_PK:
     secure: XH5leZvyuglrkuJAi9zs/u6GQKTUn30U3BLwPOVDj/E=
 init:
 - ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
