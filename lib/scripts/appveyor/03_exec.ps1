@@ -33,6 +33,7 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) TLS VERSION: $([Syst
 # list of json files
 [System.Array]$jsonFiles = Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -Recurse | Select-Object -ExpandProperty FullName
 
+# main tasks
 foreach ($jsonFile in $jsonFiles)
 {
     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) USING JSON FILE: ${jsonFile}"
@@ -89,6 +90,12 @@ foreach ($jsonFile in $jsonFiles)
         [System.String]$summary = $j.meta.summary
     }
     #endregion xml data ingest
+
+    # verify missing data
+    if ($null -eq $copright)
+    {
+        $copyright = 'none found'
+    }
 
     # meta data without prejudice
     [System.String]$category = $j.meta.category
