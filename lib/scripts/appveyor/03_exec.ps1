@@ -258,6 +258,12 @@ foreach ($jsonFile in $jsonFiles)
                 [System.String]$uninstaller_class = "exe"
                 Write-Output "Uninstaller Type: EXE"
             }
+            # exe installer 2
+            {$_ -match '^.*\.exe"$'}
+            {
+                [System.String]$uninstaller_class = "exe"
+                Write-Output "Uninstaller Type: EXE"
+            }
             # unknown installer
             Default
             {
