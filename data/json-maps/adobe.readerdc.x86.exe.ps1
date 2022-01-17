@@ -74,7 +74,7 @@ $d.installer.filename = "AcroRdrDC" + $d.id.version.Replace('.','') + "_MUI.exe"
 $d.installer.sha256 = ""
 $d.installer.followuri = "https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/" + $d.id.version.Replace('.','') + "/AcroRdrDC" + $d.id.version.Replace('.','') + "_MUI.exe"
 $d.installer.switches = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOPSHORTCUT=1"       # used for backwards compatability
-$d.installer.displayname = ""       # OPTIONAL
+$d.installer.displayname = "Adobe Acrobat Reader DC MUI"       # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
 $d.installer.uninstallstring = ""
