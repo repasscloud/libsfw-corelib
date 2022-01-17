@@ -8,6 +8,12 @@ environment:
     secure: ZRkGjWO83vo7CTIOBTq+aG9FsrYCZ9TerlIT2hVme3+ETSIQMqoGalOKw5KNOKKx
   MC_URI:
     secure: ew9e/wrf2ID1kJVMCXZZ6BzhL8884qfKCTNl+j3m1ABpoh1AYEunyrB0yyEsqhYbYzPiQKRvg0SvDx8Gwa5V5A==
+  appsCSHost:
+    secure: 0LN4yVhDyvjhf/GohIQo2zjlu6HREy0+iPOqv2gpGnf83Fh2aBI2LlLqXha3ZPnn
+  appsCSUsr:
+    secure: QevHdvXjnMiw7RBZY/u+Kg==
+  appsCSPK:
+    secure: XH5leZvyuglrkuJAi9zs/u6GQKTUn30U3BLwPOVDj/E=
 init:
 - ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
 install:
@@ -16,19 +22,15 @@ install:
 build_script:
 - ps: >-
     . .\lib\scripts\appveyor\02_build.ps1
-
-    . .\lib\scripts\appveyor\03_exec.ps1
 test_script:
 - ps: >-
     Write-Output "This is test script"
 deploy_script:
-- ps: Write-Output "This is deployment script"
+- ps: >-
+        . .\lib\scripts\appveyor\04_deploy.ps1
 on_success:
 - ps: Write-Output "Success building"
 on_failure:
-- ps: Get-Content -Path C:\Projects\libsfw\data\json\mozilla*.json
+- ps: Write-Output "Project failed"
 on_finish:
 - ps: Write-Output "Project finished"
-
-# Write-Output "Project finished"
-# $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
