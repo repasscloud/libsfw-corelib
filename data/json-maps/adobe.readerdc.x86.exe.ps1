@@ -49,7 +49,7 @@ switch($version_regex -match (((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_
 <# NUSPEC PLACEHOLDER - DO NOT EDIT #>
 $d.meta.homepage = ""
 $d.meta.iconuri = ""
-$d.meta.copyright = ""
+$d.meta.copyright = "Copyright © 1984-2018 Adobe Systems Incorporated and its licensors"
 $d.meta.license = ""
 $d.meta.docs = ""
 $d.meta.tags = ""
