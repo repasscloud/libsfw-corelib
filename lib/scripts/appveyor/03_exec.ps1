@@ -1,5 +1,4 @@
 # global variables
-[System.String]$rootPath = 'C:\Projects\libsfw'
 [System.String]$dataPath = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data'
 [System.String]$dls = Join-Path -Path $dataPath -ChildPath 'downloads'
 [System.String]$dll = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\UpdateAppsDB.exe'
@@ -202,20 +201,32 @@ foreach ($jsonFile in $jsonFiles)
         }
     }
 
-    # generate installed app comparisons
-    $old = Import-Csv -Path $env:TMP\app_list.csv | Select-Object -ExpandProperty DisplayName
-    $current = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName -and $_.DisplayName -notlike 'Microsoft Azure Libraries for .NET – v2.9'} | Select-Object -ExpandProperty DisplayName
-
-    # find newly installed app
-    foreach ($i in $current)
+    # does the displayname already exist from JSON?
+    if ($displayname.Length -eq 0)
     {
-        if ($old -notcontains $i)
+        # generate installed app comparisons
+        $old = Import-Csv -Path $env:TMP\app_list.csv | Select-Object -ExpandProperty DisplayName
+        $current = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName -and $_.DisplayName -notlike 'Microsoft Azure Libraries for .NET – v2.9'} | Select-Object -ExpandProperty DisplayName
+
+        # find newly installed app
+        foreach ($i in $current)
         {
-            $reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i} | Select-Object -Property *
+            if ($old -notcontains $i)
+            {
+                # grab the info
+                $reg_src_lookup = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i} | Select-Object -Property *
+                
+                # output the data for verbosity and manual checking
+                $reg_src_lookup
+            }
         }
+
+        # return to start of loop, needs to be manually added
+        return
     }
 
-    $reg_src
+    # set reg_src to datamatch
+    $reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname} | Select-Object -Property *
 
     #$reg_src  #this prints the registry information to the screen
     if ($reg_src)
@@ -257,11 +268,7 @@ foreach ($jsonFile in $jsonFiles)
         }
     }
 
-    # set display name if not passed in
-    if ($displayname.Length -eq 0)
-    {
-        $displayname = $reg_src.DisplayName
-    }
+    
     # set display version if not passed in
     if ($displayversion.Length -eq 0)
     {
@@ -293,6 +300,16 @@ foreach ($jsonFile in $jsonFiles)
             try {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
                 Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/q' -Wait -ErrorAction Stop
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
+            }
+            catch {
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
+            }
+        }
+        'exe' {
+            try {
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
+                Start-Process -FilePath $uninstallstring -ArgumentList $switches -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
             }
             catch {
