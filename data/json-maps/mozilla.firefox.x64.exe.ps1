@@ -88,7 +88,8 @@ $d.sysinfo = "4.3.8.10C"
 [System.String]$app_arch = $d.id.arch
 [System.String]$app_exectype = $d.installer.type
 [System.String]$data_path = Join-Path -Path $(Split-Path -Path $PSScriptRoot -Parent) -ChildPath 'json'
-$d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${app_version}-${app_arch}-${app_exectype}.json" -Encoding utf8 -Force -Confirm:$false
+#$d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${app_version}-${app_arch}-${app_exectype}.json" -Encoding utf8 -Force -Confirm:$false
+$d | ConvertTo-Json -Depth 4 | Out-File -FilePath $PSScriptRoot\firefox.json -Encoding utf8 -Force -Confirm:$false
 <# DO NOT EDIT ABOVE THIS LINE #>
 
 <# SPACE FOR NOTES#>

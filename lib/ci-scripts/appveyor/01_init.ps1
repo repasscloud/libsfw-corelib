@@ -102,3 +102,6 @@ mc cp $env:TMP\app_list.csv au-syd1-07/lib/appveyor/app_list.csv
 
 # clear environment variables
 [System.Environment]::SetEnvironmentVariable("[7zip]", $null, 'Machine')
+
+
+# load functions
