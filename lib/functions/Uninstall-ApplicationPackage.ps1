@@ -20,6 +20,7 @@ function Uninstall-ApplicationPackage {
                 if ($uninstallstring -match 'MsiExec.exe /I.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
                 if ($uninstallstring -match 'MsiExec.exe /X.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
                 try {
+                    Start-Sleep -Seconds 20
                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
                     Start-Process -FilePath msiexec -ArgumentList "/X","${uarg}","/passive" -Wait -ErrorAction Stop
                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
