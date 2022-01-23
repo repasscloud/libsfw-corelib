@@ -101,34 +101,9 @@ foreach ($jsonFile in $jsonFiles)
 
     # install application
     Install-ApplicationPackage -PackageName $app -InstallerType $type -FileName $filename -InstallSwitches $switches
-    
-
-    # does the displayname already exist from JSON?
-    if ($displayname.Length -eq 0)
-    {
-        # generate installed app comparisons
-        $old = Import-Csv -Path $env:TMP\app_list.csv | Select-Object -ExpandProperty DisplayName
-        $current = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName -and $_.DisplayName -notlike 'Microsoft Azure Libraries for .NET – v2.9'} | Select-Object -ExpandProperty DisplayName
-
-        # find newly installed app
-        foreach ($i in $current)
-        {
-            if ($old -notcontains $i)
-            {
-                # grab the info
-                $reg_src_lookup = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $i} | Select-Object -Property *
-                
-                # output the data for verbosity and manual checking
-                $reg_src_lookup
-            }
-        }
-
-        # return to start of loop, needs to be manually added
-        return
-    }
 
     # set reg_src to datamatch
-    $reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname} | Select-Object -Property *
+    $reg_src = Get-RegistrySource -RegDisplayName $displayname 
 
     # set the uninstallstring values
     $uninstaller_class = Set-UninstallerClass -UninstallString $reg_src.UninstallString
@@ -158,31 +133,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
 
     # uninstall application
-    switch ($uninstaller_class)
-    {
-        'msi' {
-            if ($uninstallstring -match 'MsiExec.exe /I.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
-            if ($uninstallstring -match 'MsiExec.exe /X.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
-            try {
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
-                "Start-Process -FilePath msiexec -ArgumentList /X '${uarg}' /passive -Wait -ErrorAction Stop"
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
-            }
-            catch {
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
-            }
-        }
-        'exe' {
-            try {
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
-                Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
-            }
-            catch {
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
-            }
-        }
-    }
+    Uninstall-ApplicationPackage -UninstallClass $uninstaller_class -UninstallString $uninstallstring
 
 
     # verify uninstalled
