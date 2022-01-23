@@ -93,9 +93,6 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$path = $j.installer.path
     [System.String]$s3repo = $j.installer.s3repo
 
-    # locale to download the installer to
-    [System.String]$download_path = Join-Path -Path $dls -ChildPath $filename
-
     # web client and config, download, dispose, voila !@danijeljw-RPC
     Get-InstallerPackage -DLUri $followuri -DLFile $filename 
 
@@ -133,51 +130,9 @@ foreach ($jsonFile in $jsonFiles)
     # set reg_src to datamatch
     $reg_src = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname} | Select-Object -Property *
 
-    #$reg_src  #this prints the registry information to the screen
-    if ($reg_src)
-    {
-        # set installer class (this doesn't represent the file type for installing!)
-        switch ($reg_src.UninstallString)
-        {
-            # msi/msix
-            {$_ -match 'MsiExec.exe /[IX]{[0-9A-Z]{8}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{12}}'}
-            {
-                [System.String]$uninstaller_class = "msi"
-                Write-Output "Uninstaller Type: MSI"
-            }
-            # inno installer
-            {$_ -match '^".*unins[0-9]{3}\.exe"$'}
-            {
-                [System.String]$uninstaller_class = "inno"
-                Write-Output "Uninstaller Type: INNO"
-            }
-            # inno installer 2
-            {$_ -match '^.*unins[0-9]{3}\.exe$'}
-            {
-                [System.String]$uninstaller_class = "inno"
-                Write-Output "Uninstaller Type: INNO"
-            }
-            # std installer
-            {$_ -match '^.*\.exe$'}
-            {
-                [System.String]$uninstaller_class = "exe"
-                Write-Output "Uninstaller Type: EXE"
-            }
-            # exe installer 2
-            {$_ -match '^.*\.exe"$'}
-            {
-                [System.String]$uninstaller_class = "exe"
-                Write-Output "Uninstaller Type: EXE"
-            }
-            # unknown installer
-            Default
-            {
-                [System.String]$uninstaller_class = "other"
-                Write-Output "Uninstaller Type: OTHER"
-                # have not found what 'ClickOnce' is represented by yet, may need to move this to the json file
-            }
-        }
-    }
+    # set the uninstallstring values
+    $uninstaller_class = Set-UninstallerClass -UninstallString $reg_src.UninstallString
+    Write-Output "Uninstaller Type: $($uninstaller_class.ToUpper())"
 
     
     # set display version if not passed in
@@ -210,7 +165,7 @@ foreach ($jsonFile in $jsonFiles)
             if ($uninstallstring -match 'MsiExec.exe /X.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
             try {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
-                Start-Process -FilePath msiexec -ArgumentList "/X ${uarg} /q" -Wait -ErrorAction Stop
+                "Start-Process -FilePath msiexec -ArgumentList /X '${uarg}' /passive -Wait -ErrorAction Stop"
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
             }
             catch {
@@ -227,7 +182,7 @@ foreach ($jsonFile in $jsonFiles)
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
             }
         }
-    } 
+    }
 
 
     # verify uninstalled

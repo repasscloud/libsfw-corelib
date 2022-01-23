@@ -22,6 +22,7 @@ install:
 #    . .\lib\scripts\appveyor\01_init.ps1
 build_script:
 - ps: >-
+    Write-Output "Hello"
 #    . .\lib\scripts\appveyor\02_build.ps1
 test_script:
 - ps: >-
