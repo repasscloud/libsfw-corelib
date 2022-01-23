@@ -18,6 +18,7 @@ init:
 - ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
 install:
 - ps: >-
+    Write-Output "Hello"
 #    . .\lib\scripts\appveyor\01_init.ps1
 build_script:
 - ps: >-
