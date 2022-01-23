@@ -18,16 +18,16 @@ init:
 - ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
 install:
 - ps: >-
-    . .\lib\scripts\appveyor\01_init.ps1
+#    . .\lib\scripts\appveyor\01_init.ps1
 build_script:
 - ps: >-
-    . .\lib\scripts\appveyor\02_build.ps1
+#    . .\lib\scripts\appveyor\02_build.ps1
 test_script:
 - ps: >-
     Write-Output "This is test script"
 deploy_script:
 - ps: >-
-        . .\lib\scripts\appveyor\04_deploy.ps1
+#        . .\lib\scripts\appveyor\04_deploy.ps1
 on_success:
 - ps: Write-Output "Success building"
 on_failure:

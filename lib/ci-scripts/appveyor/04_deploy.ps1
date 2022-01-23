@@ -1,6 +1,7 @@
 # global variables
 [System.String]$dataPath = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data'
-[System.String]$dls = Join-Path -Path $dataPath -ChildPath 'downloads'
+[System.String]$dls = Join-Path -Path  $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data\downloads'
+[System.String]$jsd = Join-Path -Path  $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data\json'
 [System.String]$dll = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\DBUtils\DBUtils.UpdateAppsDB.exe'
 [System.String]$cni = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\CreateNewIssue.exe'
 [System.String]$copyrightSymbol = [System.Char]::convertfromutf32("0x00A9")
@@ -31,7 +32,7 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) USER AGENT: ${userAg
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) TLS VERSION: $([System.Net.SecurityProtocolType]::Tls12)"
 
 # list of json files
-[System.Array]$jsonFiles = Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -Recurse | Select-Object -ExpandProperty FullName
+[System.Array]$jsonFiles = Get-ChildItem -Path $jsd -Filter "*.json" -Recurse | Select-Object -ExpandProperty FullName
 
 # main tasks
 foreach ($jsonFile in $jsonFiles)
@@ -44,64 +45,28 @@ foreach ($jsonFile in $jsonFiles)
     #region xml data ingest
     if ($j.meta.xml -ne '')
     {
-        $wc = New-Object System.Net.WebClient
-        $wc.Headers.Add("user-agent", $userAgent)
-        if (Test-Path -Path "${dls}\nuspec.xml") { Remove-Item -Path "${dls}\nuspec.xml" -Confirm:$false -Force }
-
-        try {
-            $wc.DownloadFile($j.meta.xml, "${dls}\nuspec.xml")
-            $wc.Dispose()
-
-            [xml]$x = Get-Content -Path "${dls}\nuspec.xml"
-
-            # meta data
-            [System.String]$homepage = $x.package.metadata.projectUrl
-            [System.String]$icon = $x.package.metadata.iconUrl
-            [System.String]$copyright = $x.package.metadata.copyright
-            [System.String]$license = $x.package.metadata.licenseUrl
-            [System.String]$docs = $x.package.metadata.docsUrl
-            [System.String]$tags = $x.package.metadata.tags
-            [System.String]$summary = $x.package.metadata.summary
-
-            Remove-Item -Path "${dls}\nuspec.xml" -Confirm:$false -Force
-        }
-        catch {
-            $wc.Dispose()
-
-            # meta data
-            [System.String]$homepage = $j.meta.homepage
-            [System.String]$icon = $j.meta.iconuri
-            [System.String]$copyright = $x.package.metadata.copyright
-            [System.String]$license = $j.meta.license
-            [System.String]$docs = $j.meta.docs
-            [System.String]$tags = $j.meta.tags
-            [System.String]$summary = $j.meta.summary
-        }
+        [System.Array]$returnedData = Read-XmlMetaFile -XmlURI $j.meta.xml
     }
     else
     {
         # meta data
-        [System.String]$homepage = $j.meta.homepage
-        [System.String]$icon = $j.meta.iconuri
-        [System.String]$copyright = $x.package.metadata.copyright
-        [System.String]$license = $j.meta.license
-        [System.String]$docs = $j.meta.docs
-        [System.String]$tags = $j.meta.tags
-        [System.String]$summary = $j.meta.summary
+        if ($null -ne $j.meta.projectUrl) { [System.String]$homepage = $j.meta.projectUrl } else { [System.String]$homepage = '' }
+        if ($null -ne $j.meta.iconUrl) { [System.String]$icon = $j.meta.iconUrl } else { [System.String]$icon = '' }
+        if ($null -ne $j.meta.copyright) { [System.String]$copyright = $j.meta.copyright } else { [System.String]$copyright = '' }
+        if ($null -ne $j.meta.licenseUrl) { [System.String]$license = $j.meta.licenseUrl } else { [System.String]$license = '' }
+        if ($null -ne $j.meta.docsUrl) { [System.String]$docs = $j.meta.docsUrl } else { [System.String]$docs = '' }
+        if ($null -ne $j.meta.tags) { [System.String]$tags = $j.meta.tags } else { [System.String]$tags = '' }
+        if ($null -ne $j.meta.summary) { [System.String]$summary = $j.meta.summary } else { [System.String]$summary = '' }
+
+        [System.Array]$returnedData = @($homepage, $icon, $copyright, $license, $docs, $tags, $summary)
     }
     #endregion xml data ingest
 
-    # verify missing data
-    if ($null -eq $copyright)
-    {
-        $copyright = $j.meta.copyright
-    }
-
     # meta data without prejudice
     [System.String]$category = $j.meta.category
-    [System.String]$rebootrequired = $j.meta.rebootrequired
+    [System.Char]$rebootrequired = $j.meta.rebootrequired
     [System.String]$depends = $j.meta.depends
-    [System.String]$copyright = $copyright -replace $pattern, ''
+    [System.String]$copyright = $returnedData[2] -replace $pattern, ''
     [System.String]$copyright = $copyright -replace 'Copyright', "Copyright ${copyrightSymbol}"
     [System.String]$copyright = $copyright -replace '  ', ' '
 
@@ -309,10 +274,10 @@ foreach ($jsonFile in $jsonFiles)
     {
         'msi' {
             if ($uninstallstring -match 'MsiExec.exe /I.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
-            if ($uninstallstring -match 'MsiExec.exe /X.*') {; $uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
+            if ($uninstallstring -match 'MsiExec.exe /X.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
             try {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
-                Start-Process -FilePath msiexec -ArgumentList '/X',$uarg,'/q' -Wait -ErrorAction Stop
+                Start-Process -FilePath msiexec -ArgumentList "/X ${uarg} /q" -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
             }
             catch {
@@ -322,14 +287,15 @@ foreach ($jsonFile in $jsonFiles)
         'exe' {
             try {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${displayname}"
-                Start-Process -FilePath $uninstallstring -ArgumentList $switches -Wait -ErrorAction Stop
+                Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${displayname}"
             }
             catch {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${displayname}"
             }
         }
-    }
+    } 
+
 
     # verify uninstalled
     if ($null -notlike (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $displayname}))
