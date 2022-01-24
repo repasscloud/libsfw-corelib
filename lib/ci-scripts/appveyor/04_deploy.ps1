@@ -45,10 +45,13 @@ foreach ($jsonFile in $jsonFiles)
     #region xml data ingest
     if ($j.meta.xml -ne '')
     {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) XML META USED"
         [System.Array]$returnedXmlMetaData = Read-XmlMetaFile -XmlURI $j.meta.xml
     }
     else
     {
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) XML META NOT USED"
+
         # meta data
         if ($null -ne $j.meta.projectUrl) { [System.String]$homepage = $j.meta.projectUrl } else { [System.String]$homepage = '' }
         if ($null -ne $j.meta.iconUrl) { [System.String]$icon = $j.meta.iconUrl } else { [System.String]$icon = '' }
@@ -66,7 +69,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$category = $j.meta.category
     [System.Char]$rebootrequired = [System.Char]$rebootrequired = ([System.String]$j.meta.rebootrequired).SubString(0,1)
     [System.String]$depends = $j.meta.depends
-    [System.String]$copyright = $returnedData[2] -replace $pattern, ''
+    [System.String]$copyright = $returnedXmlMetaData[2] -replace $pattern, ''
     [System.String]$copyright = $copyright -replace 'Copyright', "Copyright ${copyrightSymbol}"
     [System.String]$copyright = $copyright -replace '  ', ' '
 
