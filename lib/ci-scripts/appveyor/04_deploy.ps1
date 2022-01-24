@@ -124,7 +124,7 @@ foreach ($jsonFile in $jsonFiles)
 
     # set the uninstallstring values
     $uninstaller_class = Set-UninstallerClass -UninstallString $reg_src.UninstallString
-    Write-Output "Uninstaller Type: $($uninstaller_class.ToUpper())"
+    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) Uninstaller Type: $($uninstaller_class.ToUpper())"
     
     # set display version if not passed in
     if ($displayversion.Length -eq 0)

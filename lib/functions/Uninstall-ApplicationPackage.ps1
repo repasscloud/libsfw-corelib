@@ -11,7 +11,7 @@ function Uninstall-ApplicationPackage {
         [System.String]$DisplayName,
 
         [Parameter(Mandatory=$false)]
-        [ValidateSetAttribute("N","n","Y","y")]
+        [ValidateSet("N","n","Y","y")]
         [System.Char]$RebootRequired = "N"
     )
     
