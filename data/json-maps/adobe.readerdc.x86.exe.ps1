@@ -45,7 +45,6 @@ switch($version_regex -match (((Invoke-WebRequest -Uri $adr_uri -UserAgent $adr_
     }
 }
 
-
 <# NUSPEC PLACEHOLDER - DO NOT EDIT #>
 $d.meta.homepage = ""
 $d.meta.iconuri = ""
@@ -57,9 +56,9 @@ $d.meta.summary = ""
 $d.meta.version = ""
 
 <# META EDITS - UPDATE AS REQUIRED #>
-$d.meta.rebootrequired = "No"        # 'YES' or 'NO' only
-$d.meta.depends = "None"             # Any depedencies
-$d.meta.category = "productivity"         # Category name in lower case only
+$d.meta.rebootrequired = "No"  # 'YES' or 'NO' only
+$d.meta.depends = "None"  # Any depedencies
+$d.meta.category = "productivity"  # Category name in lower case only
 $d.meta.xft = 'mc'
 $d.meta.locale = 'au-syd1-07'
 
@@ -73,11 +72,11 @@ $d.installer.type = "exe"
 $d.installer.filename = "AcroRdrDC" + $d.id.version.Replace('.','') + "_MUI.exe"
 $d.installer.sha256 = ""
 $d.installer.followuri = "https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/" + $d.id.version.Replace('.','') + "/AcroRdrDC" + $d.id.version.Replace('.','') + "_MUI.exe"
-$d.installer.switches = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOPSHORTCUT=1"       # used for backwards compatability
-$d.installer.displayname = "Adobe Acrobat Reader DC MUI"       # OPTIONAL
-$d.installer.displayversion = ""    # OPTIONAL
+$d.installer.switches = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOPSHORTCUT=1"  # used for backwards compatability
+$d.installer.displayname = "Adobe Acrobat Reader DC MUI"  # OPTIONAL
+$d.installer.displayversion = ""  # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
-$d.installer.uninstallstring = ""
+$d.installer.uninstallstring = ""  # OPTIONAL
 $d.installer.path = 'apps' + '/' + $d.id.publisher + '/' + $d.id.name + '/' + $d.id.version + '/' + $d.id.arch + '/' + $d.installer.filename
 $d.installer.s3repo = 'au-syd1-07'
 

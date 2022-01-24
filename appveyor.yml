@@ -22,7 +22,12 @@ install:
 #    . .\lib\scripts\appveyor\01_init.ps1
 build_script:
 - ps: >-
-    $env:APPVEYOR_BUILD_FOLDER = 'C:\Projects\libsfw'; Get-ChildItem -Path C:\Projects\libsfw\lib\functions | ForEach-Object { . $_.FullName }; Set-Location -Path C:\Projects\libsfw;  C:\Projects\libsfw\lib\ci-scripts\appveyor\01_init.ps1; C:\Projects\libsfw\lib\ci-scripts\appveyor\02_build.ps1;  C:\Projects\libsfw\lib\ci-scripts\appveyor\04_deploy.ps1; 
+    $env:APPVEYOR_BUILD_FOLDER = 'C:\Projects\libsfw'
+    Get-ChildItem -Path C:\Projects\libsfw\lib\functions | ForEach-Object { . $_.FullName }
+    Set-Location -Path C:\Projects\libsfw;
+    C:\Projects\libsfw\lib\ci-scripts\appveyor\01_init.ps1
+#    C:\Projects\libsfw\lib\ci-scripts\appveyor\02_build.ps1
+#    C:\Projects\libsfw\lib\ci-scripts\appveyor\04_deploy.ps1; 
 #    . .\lib\scripts\appveyor\02_build.ps1
 test_script:
 - ps: >-
@@ -36,7 +41,7 @@ on_failure:
 - ps: Write-Output "Project failed"
 on_finish:
 - ps: Write-Output "Project finished"
-#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 
 
