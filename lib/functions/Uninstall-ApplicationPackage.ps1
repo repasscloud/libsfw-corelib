@@ -1,10 +1,18 @@
 function Uninstall-ApplicationPackage {
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory=$true)]
         [System.String]$UninstallClass,
+
+        [Parameter(Mandatory=$true)]
         [System.String]$UninstallString,
-        [System.String]$DisplayName #,
-        #[System.Boolean]$RebootRequired
+
+        [Parameter(Mandatory=$true)]
+        [System.String]$DisplayName,
+
+        [Parameter(Mandatory=$false)]
+        [ValidateSetAttribute("N","n","Y","y")]
+        [System.Char]$RebootRequired = "N"
     )
     
     begin {
@@ -16,94 +24,65 @@ function Uninstall-ApplicationPackage {
 
     process {
 
-
-        switch ($UninstallClass)
+        switch ($RebootRequired)
         {
-            'msi' {
-                [System.String]$uarg = ($UninstallString -replace "/I","/X" -replace "MsiExec.exe ","") + " /qn"
-                try {
-                    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-                    Start-Process -FilePath "C:\Windows\System32\MsiExec.exe" -ArgumentList "$($uarg)" -wait
-                    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
-                }
-                catch {
-                    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+            {$_ -eq 'n' -or $_ -eq 'N'}
+            {
+                # process like normal
+                switch ($UninstallClass)
+                {
+                    'msi' {
+                        [System.String]$uarg = ($UninstallString -replace "/I","/X" -replace "MsiExec.exe ","") + " /qn"
+                        try {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
+                            Start-Process -FilePath "C:\Windows\System32\MsiExec.exe" -ArgumentList "$($uarg)" -Wait -ErrorAction Stop
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
+                        }
+                        catch {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+                        }
+                    }
+                    'exe' {
+                        try {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
+                            Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
+                        }
+                        catch {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+                        }
+                    }
                 }
             }
-            'exe' {
-                try {
-                    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-                    Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
-                    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
-                }
-                catch {
-                    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+            Default
+            {
+                # process without reboot (ie - do not uninstall actual item)
+                switch ($UninstallClass)
+                {
+                    'msi' {
+                        [System.String]$uarg = ($UninstallString -replace "/I","/X" -replace "MsiExec.exe ","") + " /qn"
+                        try {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) NO UNINSTALL (REBOOT REQUIRED): ${DisplayName}"
+                            Write-Output "Start-Process -FilePath `"C:\Windows\System32\MsiExec.exe`" -ArgumentList `"$($uarg)`" -Wait -ErrorAction Stop"
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
+                        }
+                        catch {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+                        }
+                    }
+                    'exe' {
+                        try {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) NO UNINSTALL (REBOOT REQUIRED): ${DisplayName}"
+                            Write-Output "Start-Process -FilePath `"${uninstallstring}`" -ArgumentList `"${switches}`" -Wait -ErrorAction Stop"
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
+                        }
+                        catch {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+                        }
+                    }
                 }
             }
         }
-
-
-        # switch ($RebootRequired)
-        # {
-        #     $false {
-        #         switch ($uninstaller_class)
-        #         {
-        #             'msi' {
-        #                 [System.String]$uarg = ($UninstallString -replace "/I","/X" -replace "msiexec.exe ","") + " /qn"
-        #                 try {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-        #                     Start-Process -FilePath "C:\Windows\System32\msiexec.exe" -ArgumentList "$($uarg)" -wait
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
-        #                 }
-        #                 catch {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
-        #                 }
-        #             }
-        #             'exe' {
-        #                 try {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-        #                     Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
-        #                 }
-        #                 catch {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
-        #                 }
-        #             }
-        #         }
-        #     }
-        #     $true {
-        #         switch ($uninstaller_class)
-        #         {
-        #             'msi' {
-        #                 if ($uninstallstring -match 'MsiExec.exe /I.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /I', '') }
-        #                 if ($uninstallstring -match 'MsiExec.exe /X.*') {$uarg = $uninstallstring.Replace('MsiExec.exe /X', '') }
-        #                 try {
-        #                     Start-Sleep -Seconds 20
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-        #                     Start-Process -FilePath msiexec -ArgumentList "/X","${uarg}","/passive" -Wait -ErrorAction Stop
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
-        #                 }
-        #                 catch {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
-        #                 }
-        #             }
-        #             'exe' {
-        #                 try {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-        #                     Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
-        #                 }
-        #                 catch {
-        #                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
-        #                 }
-        #             }
-        #         }
-        #     }
-        # }
-
-
-
-        
     
         # verify app uninstalled
         if ($null -notlike (Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$_.DisplayName -like $DisplayName}))
