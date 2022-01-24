@@ -106,15 +106,23 @@ foreach ($jsonFile in $jsonFiles)
     # set reg_src to datamatch, but only if a displayname was provided, else break loop
     if ($displayname -eq '' -or $null -eq $displayname)
     {
-        Write-Output "Display name was not provided"
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) Display Name value not provided"
+        $old = Import-Csv -Path $env:TEMP\app_list.csv | Select-Object -ExpandProperty DisplayName
+        $current = Get-ChildItem -Path $hklmPaths | Get-ItemProperty | Where-Object -FilterScript {$null -notlike $_.DisplayName -and $_.DisplayName -notmatch 'Microsoft Azure Libraries for \.NET.*'} | Select-Object -ExpandProperty DisplayName
+        foreach ($i in $current)
+        {
+            if ($old -notcontains $i)
+            {
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) Display Name Matched: ${i}"
+            }
+        }
         exit 1
     }
-    $reg_src = Get-RegistrySource -RegDisplayName $displayname 
+    $reg_src = Get-RegistrySource -RegDisplayName $displayname
 
     # set the uninstallstring values
     $uninstaller_class = Set-UninstallerClass -UninstallString $reg_src.UninstallString
     Write-Output "Uninstaller Type: $($uninstaller_class.ToUpper())"
-
     
     # set display version if not passed in
     if ($displayversion.Length -eq 0)
@@ -132,14 +140,13 @@ foreach ($jsonFile in $jsonFiles)
         $uninstallstring = $reg_src.UninstallString
     }
 
-    # set detection method
+    # set detection method (this is hardcoded)
     [System.String]$detect_method = "registry"
 
-    # set detect value
+    # set detect value (this is hardcoded)
     [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
 
     # uninstall application (also verifies)
     Uninstall-ApplicationPackage -UninstallClass $uninstaller_class -UninstallString $uninstallstring -DisplayName $displayname -RebootRequired $rebootrequired
-
 
 }

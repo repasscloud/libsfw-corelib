@@ -26,7 +26,7 @@ build_script:
     Get-ChildItem -Path C:\Projects\libsfw\lib\functions | ForEach-Object { . $_.FullName };
     Set-Location -Path C:\Projects\libsfw;
     C:\Projects\libsfw\lib\ci-scripts\appveyor\01_init.ps1;
-#    C:\Projects\libsfw\lib\ci-scripts\appveyor\02_build.ps1
+    C:\Projects\libsfw\lib\ci-scripts\appveyor\02_build.ps1;
 #    C:\Projects\libsfw\lib\ci-scripts\appveyor\04_deploy.ps1; 
 #    . .\lib\scripts\appveyor\02_build.ps1
 test_script:
