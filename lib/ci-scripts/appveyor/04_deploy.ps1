@@ -89,8 +89,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$displayversion = $j.installer.displayversion
     [System.String]$displaypublisher = $j.installer.publisher
     [System.String]$uninstallstring = $j.installer.uninstallstring
-    # [System.String]$uninstallStringVerbose = $j.installer.uninstallstring
-    # 
+
     [System.String]$path = $j.installer.path
     [System.String]$s3repo = $j.installer.s3repo
 
