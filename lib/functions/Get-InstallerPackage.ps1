@@ -2,7 +2,8 @@ function Get-InstallerPackage {
     [CmdletBinding()]
     param (
         [System.String]$DLUri,
-        [System.String]$DLFile
+        [System.String]$DLFile,
+        [System.String]$DLPath
     )
     
     begin {
@@ -11,7 +12,7 @@ function Get-InstallerPackage {
     
     process {
 
-        [System.String]$OutputPath = Join-Path -Path $env:TEMP -ChildPath $DLFile
+        [System.String]$OutputPath = Join-Path -Path $DLPath -ChildPath $DLFile
 
         $wc = New-Object System.Net.WebClient
         $wc.Headers.Add("user-agent", $AgentString)

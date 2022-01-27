@@ -1,9 +1,6 @@
 # global variables
-[System.String]$dataPath = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data'
 [System.String]$dls = Join-Path -Path  $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data\downloads'
 [System.String]$jsd = Join-Path -Path  $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data\json'
-[System.String]$dll = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\DBUtils\DBUtils.UpdateAppsDB.exe'
-[System.String]$cni = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath 'utils\CreateNewIssue.exe'
 [System.String]$copyrightSymbol = [System.Char]::convertfromutf32("0x00A9")
 [System.String]$pattern = '[^a-zA-Z0-9\-\ ]'
 [System.Array]$hklmPaths = @(
@@ -11,6 +8,10 @@
     'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
 )
 $env:PATH += ';C:\mc\bin'
+$env:PATH += ';C:\Projects\AddApp\DBUtils.AddApp\bin\Release\netcoreapp3.1'
+
+# source all functions
+Get-ChildItem -Path C:\Projects\libsfw\lib\functions | ForEach-Object { . $_.FullName }
 
 # which output encoding is being used
 $OutputEncoding = New-Object -TypeName System.Text.UTF8Encoding
@@ -67,7 +68,7 @@ foreach ($jsonFile in $jsonFiles)
 
     # meta data without prejudice
     [System.String]$category = $j.meta.category
-    [System.Char]$rebootrequired = [System.Char]$rebootrequired = ([System.String]$j.meta.rebootrequired).SubString(0,1)
+    [System.Char]$rebootrequired = ([System.String]$j.meta.rebootrequired).SubString(0,1).ToLower()
     [System.String]$depends = $j.meta.depends
     [System.String]$copyright = $returnedXmlMetaData[2] -replace $pattern, ''
     [System.String]$copyright = $copyright -replace 'Copyright', "Copyright ${copyrightSymbol}"
@@ -85,7 +86,6 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$app = $j.installer.app
     [System.String]$type = $j.installer.type
     [System.String]$filename = $j.installer.filename
-    [System.String]$jsha256 = $j.installer.sha256
     [System.String]$followuri = $j.installer.followuri
     [System.String]$switches = $j.installer.switches
     [System.String]$displayname = $j.installer.displayname
@@ -93,17 +93,19 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$displaypublisher = $j.installer.publisher
     [System.String]$uninstallstring = $j.installer.uninstallstring
 
-    [System.String]$path = $j.installer.path
-    [System.String]$s3repo = $j.installer.s3repo
+    [System.String]$uripath = $j.installer.path
+    [System.String]$locale = $j.meta.locale
+    [System.String]$repogeo = $j.installer.geo
+    [System.String]$xft = $j.meta.xft
 
     # web client and config, download, dispose, voila !@danijeljw-RPC
-    Get-InstallerPackage -DLUri $followuri -DLFile $filename 
+    Get-InstallerPackage -DLUri $followuri -DLFile $filename -DLPath $dls
 
     # what is the file hash?
-    [System.String]$sha256 = Read-FileHash -DLFile $filename
+    [System.String]$sha256 = Read-FileHash -DLFile $filename -DLPath $dls
 
     # install application
-    Install-ApplicationPackage -PackageName $app -InstallerType $type -FileName $filename -InstallSwitches $switches
+    Install-ApplicationPackage -PackageName $app -InstallerType $type -FileName $filename -InstallSwitches $switches -DLPath $dls
 
     # set reg_src to datamatch, but only if a displayname was provided, else break loop
     if ($displayname -eq '' -or $null -eq $displayname)
@@ -151,4 +153,44 @@ foreach ($jsonFile in $jsonFiles)
     # uninstall application (also verifies)
     Uninstall-ApplicationPackage -UninstallClass $uninstaller_class -UninstallString $uninstallstring -DisplayName $displayname -RebootRequired $rebootrequired
 
+    # migrate package to internal servers
+    Add-ExecToRepo -XFT $xft -Locality $locale -Uri $uripath -Upload $filename -DLPath $dls
+
+    # commit package to sql
+    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) SQL VERBOSE OUTPUT:"
+    "    --uid '$uid'
+    --key '$app'
+    --latest 'y'
+    --category '$category'
+    --publisher '$publisher'
+    --name '$name'
+    --version '$version'
+    --cpu_arch '$arch'
+    --exec_type '$type'
+    --filename '$filename'
+    --sha256 '$sha256'
+    --followuri '$followuri'
+    --switches '$switches'
+    --display_name '$displayname'
+    --display_publisher '$displaypublisher'
+    --display_version '$displayversion'
+    --uninstall_string '$uninstallstring'
+    --detect_method '$detect_method'
+    --detect_value '$detect_value'
+    --uninstaller_class '$uninstaller_class'
+    --homepage '$($returnedXmlMetaData[0])'
+    --icon '$($returnedXmlMetaData[1])'
+    --docs '$($returnedXmlMetaData[4])'
+    --license '$($returnedXmlMetaData[3])'
+    --tags '$($returnedXmlMetaData[5])'
+    --summary '$($returnedXmlMetaData[6])'
+    --reboot_required '$rebootrequired'
+    --depends_on '$depends'
+    --lcid '$lcid'
+    --xft '$xft'
+    --locale '$locale'
+    --repo '$repogeo'
+    --uri_path '$uripath'"
+
+    dbaap.exe --uid "${uid}" --key "${app}" --latest "y" --category "${category}" --publisher "${publisher}" --name "${name}" --version "${version}" --cpu_arch "${arch}" --exec_type "${type}" --filename "${filename}" --sha256 "${sha256}" --followuri "${followuri}" --switches "${switches}" --display_name "${displayname}" --display_publisher "${displaypublisher}" --display_version "${displayversion}" --uninstall_string "${uninstallstring}" --detect_method "${detect_method}" --detect_value "${detect_value}" --uninstaller_class "${uninstaller_class}" --homepage "${($returnedXmlMetaData[0])}" --icon "${($returnedXmlMetaData[1])}" --docs "${($returnedXmlMetaData[4])}" --license "${($returnedXmlMetaData[3])}" --tags "${($returnedXmlMetaData[5])}" --summary "${($returnedXmlMetaData[6])}" --reboot_required "${rebootrequired}" --depends_on "${depends}" --lcid "${lcid}" --xft "${xft}" --locale "${locale}" --repo "${repogeo}" --uri_path "${uripath}" --cshost $env:DB_HOST --csport $env:DB_PORT --csdb $env:DB_DB --csuserid $env:DB_USERID --cspass $env:DB_PASS
 }

@@ -36,7 +36,6 @@ function Uninstall-ApplicationPackage {
                         try {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
                             Start-Process -FilePath "C:\Windows\System32\MsiExec.exe" -ArgumentList "$($uarg)" -Wait -ErrorAction Stop
-                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
                         }
                         catch {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
@@ -46,7 +45,6 @@ function Uninstall-ApplicationPackage {
                         try {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
                             Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
-                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
                         }
                         catch {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
@@ -64,7 +62,6 @@ function Uninstall-ApplicationPackage {
                         try {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) NO UNINSTALL (REBOOT REQUIRED): ${DisplayName}"
                             Write-Output "Start-Process -FilePath `"C:\Windows\System32\MsiExec.exe`" -ArgumentList `"$($uarg)`" -Wait -ErrorAction Stop"
-                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
                         }
                         catch {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
@@ -74,7 +71,6 @@ function Uninstall-ApplicationPackage {
                         try {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) NO UNINSTALL (REBOOT REQUIRED): ${DisplayName}"
                             Write-Output "Start-Process -FilePath `"${uninstallstring}`" -ArgumentList `"${switches}`" -Wait -ErrorAction Stop"
-                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLED: ${DisplayName}"
                         }
                         catch {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"

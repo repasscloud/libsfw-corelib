@@ -4,10 +4,11 @@ function Install-ApplicationPackage {
         [System.String]$PackageName,
         [System.String]$InstallerType,
         [System.String]$FileName,
-        [System.String]$InstallSwitches
+        [System.String]$InstallSwitches,
+        [System.String]$DLPath
     )
     
-    [System.String]$download_path = Join-Path -Path $env:TEMP -ChildPath $FileName
+    [System.String]$download_path = Join-Path -Path $DLPath -ChildPath $FileName
 
     switch ($InstallerType)
     {

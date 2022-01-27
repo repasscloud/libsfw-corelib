@@ -1,7 +1,8 @@
 # path variables
-[System.String]$rootPath = $env:APPVEYOR_BUILD_FOLDER
-[System.String]$jsonMaps = Join-Path -Path $rootPath -ChildPath "data\json-maps"
-$env:PATH += ';C:\mc\bin'
+[System.String]$jsonMaps = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "data\json-maps"
+
+# source all functions
+Get-ChildItem -Path C:\Projects\libsfw\lib\functions | ForEach-Object { . $_.FullName }
 
 # notice
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E3")) Building JSON Library Files"

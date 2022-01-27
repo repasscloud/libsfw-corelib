@@ -57,8 +57,8 @@ $d.meta.version = ""
 $d.meta.rebootrequired = "No"        # 'YES' or 'NO' only
 $d.meta.depends = "None"             # Any depedencies
 $d.meta.category = "browser"         # Category name in lower case only
-$d.meta.xft = 'mc'
-$d.meta.locale = 'au-syd1-07'
+$d.meta.xft = "mc"
+$d.meta.locale = "au-syd1-07"
 
 $d.id.name = "Firefox"
 $d.id.publisher = "Mozilla"
@@ -75,8 +75,8 @@ $d.installer.displayname = "Mozilla Firefox (x64 en-US)"  # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
 $d.installer.uninstallstring = ""
-$d.installer.path = 'apps' + '/' + $d.id.publisher + '/' + $d.id.name + '/' + $d.id.version + '/' + $d.id.arch + '/' + $d.installer.filename
-$d.installer.s3repo = 'au-syd1-07'
+$d.installer.path = "apps/" + $d.id.publisher + "/" + $d.id.name + "/" + $d.id.version + "/" + $d.id.arch + "/" + $d.installer.filename
+$d.installer.geo = "au-syd1-07"
 
 <# UID ISO:1005 #>
 $d.id.uid = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','') + '-' + $d.id.version + '-' + $d.id.arch + '-' + $d.installer.type
@@ -92,4 +92,4 @@ $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${ap
 <# DO NOT EDIT ABOVE THIS LINE #>
 
 <# SPACE FOR NOTES#>
-# Should not be installed with any other Firefox version for testing purposes.
+# Should not be installed with any other Firefox version. For testing purposes.
