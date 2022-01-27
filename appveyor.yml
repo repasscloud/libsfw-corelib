@@ -33,5 +33,5 @@ on_success:
 on_failure:
 - ps: Write-Output "Project failed"
 on_finish:
-- ps: .\lib\ci-scripts\appveyor\04_deploy.ps1
+- ps: .\lib\ci-scripts\appveyor\on_completion.ps1
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
