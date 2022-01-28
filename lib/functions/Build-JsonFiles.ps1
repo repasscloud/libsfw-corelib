@@ -13,7 +13,7 @@ function Build-JsonFiles {
         [System.String]$jsonPathSrc = $ps1.FullName
 
         # advise the file is being built
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) Building JSON file for ingest: ${jsonFileSrc}"
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILDING JSON FILE FOR INGEST: ${jsonFileSrc}"
 
         # execute the generation of the JSON library file
         & $jsonPathSrc
