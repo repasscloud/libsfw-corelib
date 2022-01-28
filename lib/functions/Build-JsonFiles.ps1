@@ -16,6 +16,13 @@ function Build-JsonFiles {
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILDING JSON FILE FOR INGEST: ${jsonFileSrc}"
 
         # execute the generation of the JSON library file
-        & $jsonPathSrc
+        try
+        {
+            Start-Process -FilePath powershell -ArgumentList $jsonPathSrc -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Output "Unable to process: $jsonFileSrc"
+        }
     }
 }
