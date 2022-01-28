@@ -96,4 +96,4 @@ $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${ap
 <# DO NOT EDIT ABOVE THIS LINE #>
 
 <# SPACE FOR NOTES#>
-# Should not be installed with any other Firefox version.
+# Should not be installed with any other Firefox version. For testing purposes.
