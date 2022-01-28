@@ -17,7 +17,7 @@ function Get-InstallerPackage {
         $wc = New-Object System.Net.WebClient
         $wc.Headers.Add("user-agent", $AgentString)
 
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) Downloading file: ${DLFile}"
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) DOWNLOADING FILE: ${DLFile}"
 
         try
         {

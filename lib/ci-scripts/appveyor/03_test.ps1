@@ -9,7 +9,7 @@ foreach ($i in (Get-ChildItem -Path $jsonFiles -Filter "*.json" | Select-Object 
 {
     [System.String]$uid = (Get-Content -Path $i | ConvertFrom-Json).id.uid
     [System.String]$lup = uidlookup.exe --cshost $env:DB_HOST --csport $env:DB_PORT --csdb $env:DB_DB --csuserid $env:DB_USERID --cspass $env:DB_PASS --uid $uid
-    Write-Output "LUP Code: ${lup}"
+    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) LUP CODE: ${lup}"
     if ($lup -eq "0")
     {
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E3")) FILE TO PROCESS: ${i}"

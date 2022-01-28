@@ -29,7 +29,7 @@ function Add-ExecToRepo {
             'mc' {
                 
                 (mc cp "${download_path}" $Locality/$Uri) 2>&1>$null
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) Package Uploaded via 'mc'"
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) PAVCKAGE UPLOADED VIA: mc"
             }
         }
     }
@@ -41,7 +41,7 @@ function Add-ExecToRepo {
         }
         catch
         {
-            Write-Verbose "Unable to delete file: ${download_path}"
+            Write-Verbose "UNABLE TO DELETE FILE: ${download_path}"
         }
         [System.GC]::Collect()
     }

@@ -19,7 +19,7 @@ function Install-ApplicationPackage {
             try
             {
                 Start-Process -FilePath "${download_path}" -ArgumentList "${InstallSwitches}" -Wait -ErrorAction Stop
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLED ${PackageName} SUCCESSFULLY"
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALL SUCCESSFULL: ${PackageName}"
                 Start-Sleep -Seconds 3
             }
             catch
@@ -35,19 +35,19 @@ function Install-ApplicationPackage {
             try
             {
                 Start-Process -FilePath msiexec -ArgumentList "/i `"${download_path}`" ${InstallSwitches}" -Wait -ErrorAction Stop
-                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${PackageName} INSTALLED SUCCESSFULLY"
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALL SUCCESSFULL: ${PackageName}"
                 Start-Sleep -Seconds 3
             }
             catch
             {
-                Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${PackageName} NOT INSTALLED"
+                Write-Output "$([char]::ConvertFromUTF32("0x1F534")) NOT INSTALLED: ${PackageName} "
                 exit 1
             }
         }
         Default
         {
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) INSTALLER TYPE: ${InstallerType}"
-            Write-Output "$([char]::ConvertFromUTF32("0x1F534")) ${PackageName} NOT INSTALLED"
+            Write-Output "$([char]::ConvertFromUTF32("0x1F534")) NOT INSTALLED: ${PackageName} "
             exit 1
         }
     }
