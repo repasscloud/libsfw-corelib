@@ -22,12 +22,10 @@ function Build-JsonFiles {
         try
         {
             & $jsonPathSrc
-            $tt = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "data\json"
-            Get-ChildItem -Path $tt
         }
         catch
         {
-            Write-Output "Unable to process: $jsonFileSrc"
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) UNABLE TO PROCESS: ${jsonFileSrc}"
         }
     }
 }
