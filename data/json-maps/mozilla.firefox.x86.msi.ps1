@@ -97,3 +97,5 @@ $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${ap
 
 <# SPACE FOR NOTES#>
 # Should not be installed with any other Firefox version.
+# Requires a timeout between activities because it's Firefox :(
+Start-Sleep -Seconds 10

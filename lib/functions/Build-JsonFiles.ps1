@@ -22,7 +22,8 @@ function Build-JsonFiles {
         try
         {
             & $jsonPathSrc
-            Get-ChildItem -Path $JsonMapDir
+            $tt = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "data\json"
+            Get-ChildItem -Path $tt
         }
         catch
         {
