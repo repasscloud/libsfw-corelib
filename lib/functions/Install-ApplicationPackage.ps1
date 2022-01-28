@@ -34,7 +34,7 @@ function Install-ApplicationPackage {
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) INSTALLING APPLICATION: ${PackageName}"
             try
             {
-                Start-Process -FilePath msiexec -ArgumentList "/i ${download_path} ${InstallSwitches}" -Wait -ErrorAction Stop
+                Start-Process -FilePath msiexec -ArgumentList "/i `"${download_path}`" ${InstallSwitches}" -Wait -ErrorAction Stop
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ${PackageName} INSTALLED SUCCESSFULLY"
                 Start-Sleep -Seconds 3
             }
