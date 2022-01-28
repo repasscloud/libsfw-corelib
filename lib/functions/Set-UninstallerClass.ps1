@@ -30,7 +30,7 @@ function Set-UninstallerClass {
         # exe installer 2
         {$_ -match '^.*\.exe"$'}
         {
-            [System.String]$UninstallerClass = "exe"
+            [System.String]$UninstallerClass = "exe2"
         }
         # unknown installer
         Default
