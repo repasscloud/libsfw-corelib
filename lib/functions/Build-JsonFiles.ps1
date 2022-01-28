@@ -4,6 +4,9 @@ function Build-JsonFiles {
         [System.String]$JsonMapDir
     )
     
+    # declare error action
+    $ErrorActionPreference = "Stop"
+
     [System.Array]$PS1SrcFiles = Get-ChildItem -Path $JsonMapDir -Filter "*.ps1" | Select-Object FullName,Name
     
     foreach ($ps1 in $PS1SrcFiles)
@@ -18,7 +21,8 @@ function Build-JsonFiles {
         # execute the generation of the JSON library file
         try
         {
-            Start-Process -FilePath powershell -ArgumentList $jsonPathSrc -ErrorAction Stop
+            & $jsonPathSrc
+            Get-ChildItem -Path $JsonMapDir
         }
         catch
         {
