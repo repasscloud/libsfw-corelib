@@ -10,6 +10,7 @@ $d = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.meta = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.id = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.installer = [System.Collections.Specialized.OrderedDictionary]@{}
+$d.uninstaller = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.sysinfo = [System.Collections.Specialized.OrderedDictionary]@{}
 
 <# NUSPEC FILE - URI ONLY #>
