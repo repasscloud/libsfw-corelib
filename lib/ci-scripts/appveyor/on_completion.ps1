@@ -11,7 +11,8 @@ Install-Module -Name PowerShellForGitHub
 # configure PSFGH
 $secureString = ($env:GH_POST_API_ATKN | ConvertTo-SecureString -AsPlainText -Force)
 $cred = New-Object System.Management.Automation.PSCredential "username is ignored", $secureString
-Set-GitHubAuthentication -Credential $cred -SessionOnly -DisableTelemetry
+Set-GitHubAuthentication -Credential $cred -SessionOnly
+Set-GitHubConfiguration -DisableTelemetry
 $secureString = $null # clear this out now that it's no longer needed
 $cred = $null # clear this out now that it's no longer needed
 
