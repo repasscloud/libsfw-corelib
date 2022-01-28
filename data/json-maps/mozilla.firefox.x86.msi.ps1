@@ -69,7 +69,7 @@ $d.id.lcid = "en-US"
 
 $d.installer.app = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','')
 $d.installer.type = "msi"
-$d.installer.filename = "Firefox Setup " + $d.id.version + ".exe"
+$d.installer.filename = "Firefox Setup " + $d.id.version + ".msi"
 $d.installer.sha256 = ""
 $d.installer.followuri = 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win&lang=en-US'
 $d.installer.switches = "-ms"       # used for backwards compatability
