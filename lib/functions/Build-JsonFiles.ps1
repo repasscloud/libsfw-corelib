@@ -18,8 +18,10 @@ function Build-JsonFiles {
         # execute the generation of the JSON library file
         try
         {
+            # build the file
             & $jsonPathSrc
-            # advise the file is being built
+
+            # advise the file has been built
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILT JSON FILE FOR INGEST: ${jsonFileSrc}"
         }
         catch
