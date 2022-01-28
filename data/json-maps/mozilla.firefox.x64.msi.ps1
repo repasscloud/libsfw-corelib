@@ -86,7 +86,7 @@ $d.uninstaller.args = "-ms"
 $d.id.uid = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','') + '-' + $d.id.version + '-' + $d.id.arch + '-' + $d.installer.type
 
 <# DO NOT EDIT BELOW THIS LINE #>
-$d.sysinfo = "4.3.8.10C"
+$d.sysinfo = "4.4.0.1"
 [System.String]$app_name = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','')
 [System.String]$app_version = $d.id.version
 [System.String]$app_arch = $d.id.arch
