@@ -16,6 +16,7 @@ $d.sysinfo = [System.Collections.Specialized.OrderedDictionary]@{}
 $d.meta.xml = "https://raw.githubusercontent.com/chocolatey-community/chocolatey-coreteampackages/master/automatic/firefox/firefox.nuspec"
 
 <# REGEX - ONLY IF REQUIRED ELSE DELETE #>
+if (Test-Path -Path "$($env:TMP)\nuspec.xml") { Remove-Item -Path "$($env:TMP)\nuspec.xml" -Confirm:$false -Force }
 $wc = New-Object System.Net.WebClient
 $wc.Headers.Add("user-agent", $userAgent)
 try
@@ -24,7 +25,7 @@ try
     $wc.Dispose()
     [xml]$x = Get-Content -Path "$($env:TMP)\nuspec.xml"
     $version_regex = $x.package.metadata.version
-    Remove-Item -Path "$($env:TMP)\nuspec.xml" -Confirm:$false -Force
+    if (Test-Path -Path "$($env:TMP)\nuspec.xml") { Remove-Item -Path "$($env:TMP)\nuspec.xml" -Confirm:$false -Force }
 }
 catch
 {
@@ -74,9 +75,11 @@ $d.installer.switches = "/qn"       # used for backwards compatability
 $d.installer.displayname = "Mozilla Firefox (x64 en-US)"  # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
-$d.installer.uninstallstring = ""
 $d.installer.path = "apps/" + $d.id.publisher + "/" + $d.id.name + "/" + $d.id.version + "/" + $d.id.arch + "/" + $d.installer.filename
 $d.installer.geo = "au-syd1-07"
+
+$d.uninstaller.string = ""
+$d.uninstaller.args = "-ms"
 
 <# UID ISO:1005 #>
 $d.id.uid = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','') + '-' + $d.id.version + '-' + $d.id.arch + '-' + $d.installer.type

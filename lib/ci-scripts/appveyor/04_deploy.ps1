@@ -1,3 +1,4 @@
+#region DO NOT EDIT
 # global variables
 [System.String]$dls = Join-Path -Path  $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data\downloads'
 [System.String]$jsd = Join-Path -Path  $env:APPVEYOR_BUILD_FOLDER -ChildPath 'data\json'
@@ -34,6 +35,7 @@ Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) TLS VERSION: $([Syst
 
 # list of json files
 [System.Array]$jsonFiles = Get-ChildItem -Path $jsd -Filter "*.json" -Recurse | Select-Object -ExpandProperty FullName
+#endregion DO NOT EDIT
 
 # main tasks
 foreach ($jsonFile in $jsonFiles)
@@ -87,11 +89,12 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$type = $j.installer.type
     [System.String]$filename = $j.installer.filename
     [System.String]$followuri = $j.installer.followuri
-    [System.String]$switches = $j.installer.switches
+    [System.String]$installargs = $j.installer.switches
     [System.String]$displayname = $j.installer.displayname
     [System.String]$displayversion = $j.installer.displayversion
     [System.String]$displaypublisher = $j.installer.publisher
-    [System.String]$uninstallstring = $j.installer.uninstallstring
+    [System.String]$uninstallstring = $j.uninstaller.string
+    [System.String]$uninstallargs = $j.uninstaller.args
 
     [System.String]$uripath = $j.installer.path
     [System.String]$locale = $j.meta.locale
@@ -105,7 +108,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$sha256 = Read-FileHash -DLFile $filename -DLPath $dls
 
     # install application
-    Install-ApplicationPackage -PackageName $app -InstallerType $type -FileName $filename -InstallSwitches $switches -DLPath $dls
+    Install-ApplicationPackage -PackageName $app -InstallerType $type -FileName $filename -InstallSwitches $installargs -DLPath $dls
 
     # set reg_src to datamatch, but only if a displayname was provided, else break loop
     if ($displayname -eq '' -or $null -eq $displayname)
@@ -126,7 +129,7 @@ foreach ($jsonFile in $jsonFiles)
 
     # set the uninstallstring values
     $uninstaller_class = Set-UninstallerClass -UninstallString $reg_src.UninstallString
-    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) Uninstaller Type: $($uninstaller_class.ToUpper())"
+    Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) UNINSTALLER TYPE: $($uninstaller_class.ToUpper())"
     
     # set display version if not passed in
     if ($displayversion.Length -eq 0)
@@ -151,7 +154,7 @@ foreach ($jsonFile in $jsonFiles)
     [System.String]$detect_value = $reg_src.PSPath.Replace("Microsoft.PowerShell.Core\Registry::","")
 
     # uninstall application (also verifies)
-    Uninstall-ApplicationPackage -UninstallClass $uninstaller_class -UninstallString $uninstallstring -DisplayName $displayname -RebootRequired $rebootrequired
+    Uninstall-ApplicationPackage -UninstallClass $uninstaller_class -UninstallString $uninstallstring -UninstallArgs $uninstallargs -DisplayName $displayname -RebootRequired $rebootrequired
 
     # migrate package to internal servers
     Add-ExecToRepo -XFT $xft -Locality $locale -Uri $uripath -Upload $filename -DLPath $dls
@@ -175,6 +178,7 @@ foreach ($jsonFile in $jsonFiles)
     --display_publisher '$displaypublisher'
     --display_version '$displayversion'
     --uninstall_string '$uninstallstring'
+    --uninstall_args '$uninstallargs'
     --detect_method '$detect_method'
     --detect_value '$detect_value'
     --uninstaller_class '$uninstaller_class'
@@ -192,5 +196,5 @@ foreach ($jsonFile in $jsonFiles)
     --repo '$repogeo'
     --uri_path '$uripath'"
 
-    dbaap.exe --uid "${uid}" --key "${app}" --latest "y" --category "${category}" --publisher "${publisher}" --name "${name}" --version "${version}" --cpu_arch "${arch}" --exec_type "${type}" --filename "${filename}" --sha256 "${sha256}" --followuri "${followuri}" --switches "${switches}" --display_name "${displayname}" --display_publisher "${displaypublisher}" --display_version "${displayversion}" --uninstall_string "${uninstallstring}" --detect_method "${detect_method}" --detect_value "${detect_value}" --uninstaller_class "${uninstaller_class}" --homepage "${($returnedXmlMetaData[0])}" --icon "${($returnedXmlMetaData[1])}" --docs "${($returnedXmlMetaData[4])}" --license "${($returnedXmlMetaData[3])}" --tags "${($returnedXmlMetaData[5])}" --summary "${($returnedXmlMetaData[6])}" --reboot_required "${rebootrequired}" --depends_on "${depends}" --lcid "${lcid}" --xft "${xft}" --locale "${locale}" --repo "${repogeo}" --uri_path "${uripath}" --cshost $env:DB_HOST --csport $env:DB_PORT --csdb $env:DB_DB --csuserid $env:DB_USERID --cspass $env:DB_PASS
+    dbaap.exe --uid "${uid}" --key "${app}" --latest "y" --category "${category}" --publisher "${publisher}" --name "${name}" --version "${version}" --cpu_arch "${arch}" --exec_type "${type}" --filename "${filename}" --sha256 "${sha256}" --followuri "${followuri}" --switches "${switches}" --display_name "${displayname}" --display_publisher "${displaypublisher}" --display_version "${displayversion}" --uninstall_string "${uninstallstring}" --uninstall_args "${uninstallargs}" --detect_method "${detect_method}" --detect_value "${detect_value}" --uninstaller_class "${uninstaller_class}" --homepage "${($returnedXmlMetaData[0])}" --icon "${($returnedXmlMetaData[1])}" --docs "${($returnedXmlMetaData[4])}" --license "${($returnedXmlMetaData[3])}" --tags "${($returnedXmlMetaData[5])}" --summary "${($returnedXmlMetaData[6])}" --reboot_required "${rebootrequired}" --depends_on "${depends}" --lcid "${lcid}" --xft "${xft}" --locale "${locale}" --repo "${repogeo}" --uri_path "${uripath}" --cshost $env:DB_HOST --csport $env:DB_PORT --csdb $env:DB_DB --csuserid $env:DB_USERID --cspass $env:DB_PASS
 }

@@ -8,6 +8,9 @@ function Uninstall-ApplicationPackage {
         [System.String]$UninstallString,
 
         [Parameter(Mandatory=$true)]
+        [System.String]$UninstallArgs,
+
+        [Parameter(Mandatory=$true)]
         [System.String]$DisplayName,
 
         [Parameter(Mandatory=$false)]
@@ -44,7 +47,16 @@ function Uninstall-ApplicationPackage {
                     'exe' {
                         try {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
-                            Start-Process -FilePath $uninstallstring -ArgumentList "${switches}" -Wait -ErrorAction Stop
+                            Start-Process -FilePath "`"$uninstallstring`"" -ArgumentList "${UninstallArgs}" -Wait -ErrorAction Stop
+                        }
+                        catch {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+                        }
+                    }
+                    'exe2' {
+                        try {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) START UNINSTALL: ${DisplayName}"
+                            Start-Process -FilePath $uninstallstring -ArgumentList "${UninstallArgs}" -Wait -ErrorAction Stop
                         }
                         catch {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
@@ -68,6 +80,15 @@ function Uninstall-ApplicationPackage {
                         }
                     }
                     'exe' {
+                        try {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) NO UNINSTALL (REBOOT REQUIRED): ${DisplayName}"
+                            Write-Output "Start-Process -FilePath `"${uninstallstring}`" -ArgumentList `"${switches}`" -Wait -ErrorAction Stop"
+                        }
+                        catch {
+                            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) DID NOT UNINSTALL: ${DisplayName}"
+                        }
+                    }
+                    'exe2' {
                         try {
                             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) NO UNINSTALL (REBOOT REQUIRED): ${DisplayName}"
                             Write-Output "Start-Process -FilePath `"${uninstallstring}`" -ArgumentList `"${switches}`" -Wait -ErrorAction Stop"
