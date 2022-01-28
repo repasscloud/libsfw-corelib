@@ -64,15 +64,15 @@ $d.meta.locale = "au-syd1-07"
 
 $d.id.name = "Firefox"
 $d.id.publisher = "Mozilla"
-$d.id.arch = "x64"
+$d.id.arch = "x86"
 $d.id.lcid = "en-US"
 
 $d.installer.app = $d.id.publisher.ToLower().Replace(' ','') + "." + $d.id.name.ToLower().Replace(' ','')
 $d.installer.type = "msi"
-$d.installer.filename = "Firefox Setup " + $d.id.version + ".msi"
+$d.installer.filename = "Firefox Setup " + $d.id.version + ".exe"
 $d.installer.sha256 = ""
-$d.installer.followuri = 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US'
-$d.installer.switches = "/qn"       # used for backwards compatability
+$d.installer.followuri = 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win&lang=en-US'
+$d.installer.switches = "-ms"       # used for backwards compatability
 $d.installer.displayname = ""  # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
@@ -96,4 +96,4 @@ $d | ConvertTo-Json -Depth 4 | Out-File -FilePath "${data_path}\${app_name}-${ap
 <# DO NOT EDIT ABOVE THIS LINE #>
 
 <# SPACE FOR NOTES#>
-# Should not be installed with any other Firefox version. For testing purposes.
+# Should not be installed with any other Firefox version.
