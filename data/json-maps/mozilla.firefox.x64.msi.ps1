@@ -73,7 +73,7 @@ $d.installer.filename = "Firefox Setup " + $d.id.version + ".msi"
 $d.installer.sha256 = ""
 $d.installer.followuri = 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US'
 $d.installer.switches = "/qn"       # used for backwards compatability
-$d.installer.displayname = ""  # OPTIONAL
+$d.installer.displayname = "Mozilla Firefox (x64 en-US)"  # OPTIONAL
 $d.installer.displayversion = ""    # OPTIONAL
 $d.installer.displaypublisher = ""  # OPTIONAL
 $d.installer.path = "apps/" + $d.id.publisher + "/" + $d.id.name + "/" + $d.id.version + "/" + $d.id.arch + "/" + $d.installer.filename
