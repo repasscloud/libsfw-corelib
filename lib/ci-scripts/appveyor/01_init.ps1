@@ -83,7 +83,9 @@ catch
 
 
 # minio/mc configuration
-New-Item -Path C:\mc\bin -ItemType Directory -Force -Confirm:$false
+Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) CREATE DIRECTORY: 'C:\mc'"
+New-Item -Path C:\mc\bin -ItemType Directory -Force -Confirm:$false | Out-Null
+Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) UPDATE ENV:PATH"
 $env:PATH += ';C:\mc\bin'
 Invoke-WebRequest -Uri https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile C:\mc\bin\mc.exe -UseBasicParsing
 mc alias set au-syd1-07 $env:MC_URI $env:MC_ACCESS_KEY $env:MC_SECRET_KEY
