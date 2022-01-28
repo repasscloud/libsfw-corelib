@@ -15,13 +15,12 @@ function Build-JsonFiles {
         [System.String]$jsonFileSrc = $ps1.Name
         [System.String]$jsonPathSrc = $ps1.FullName
 
-        # advise the file is being built
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILDING JSON FILE FOR INGEST: ${jsonFileSrc}"
-
         # execute the generation of the JSON library file
         try
         {
             & $jsonPathSrc
+            # advise the file is being built
+            Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILT JSON FILE FOR INGEST: ${jsonFileSrc}"
         }
         catch
         {
