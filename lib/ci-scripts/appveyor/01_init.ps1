@@ -1,3 +1,6 @@
+# show date time
+(Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+
 # uninstall Google Update Tool
 [System.String]$app_i = "Google Auto Update Tool"
 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLING ${app_i}"
