@@ -48,7 +48,7 @@ switch($version_regex -match ([System.Net.HttpWebRequest]::Create('https://www.m
 <# NUSPEC PLACEHOLDER - DO NOT EDIT #>
 $d.meta.homepage = ""
 $d.meta.iconuri = ""
-$d.meta.copyright = "Copyright © 1998-2022 Mozilla Foundation"
+$d.meta.copyright = "Copyright © 1998-$((Get-Date).ToString('yyyy')) Mozilla Foundation"
 $d.meta.license = ""
 $d.meta.docs = ""
 $d.meta.tags = ""

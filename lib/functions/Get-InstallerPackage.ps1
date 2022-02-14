@@ -8,7 +8,6 @@ function Get-InstallerPackage {
     
     begin {
         [System.String]$AgentString = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT; Windows NT 10.0; en-US)'
-        Remove-Variable -Name wc -Force -Confirm:$false
     }
     
     process {
