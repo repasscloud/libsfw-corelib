@@ -1,0 +1,3 @@
+[submodule "lib/functions"]
+	path = lib/functions
+	url = git@github.com:repasscloud/libsfw-ps.git
