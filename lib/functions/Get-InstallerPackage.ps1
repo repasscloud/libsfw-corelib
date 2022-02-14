@@ -7,7 +7,8 @@ function Get-InstallerPackage {
     )
     
     begin {
-        [System.String]$AgentString = ' Mozilla/5.0 (compatible; MSIE 9.0; Windows NT; Windows NT 10.0; en-US)'
+        [System.String]$AgentString = 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT; Windows NT 10.0; en-US)'
+        Remove-Variable -Name wc -Force -Confirm:$false
     }
     
     process {
@@ -21,7 +22,7 @@ function Get-InstallerPackage {
 
         try
         {
-            $wc.DownloadFile($DLUri, $OutputPath)
+            $wc.DownloadFile("${DLUri}", "${OutputPath}")
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) FILE DOWNLOADED TO: ${OutputPath}"
             $wc.Dispose()     
         }
