@@ -24,7 +24,7 @@ environment:
   DCKR_USR:
     secure: hHm0hW6n7R8L4rqUgxBDNg==
   DCKR_PASS:
-    secure: 7dCGsxriYFarmkqVFnDBf/r1ndGi4pGQsiV82kTbszA=
+    secure: kgWjaUEnrIMd+ZZg2j6gOw==
   DB_HOST:
     secure: 0LN4yVhDyvjhf/GohIQo2zjlu6HREy0+iPOqv2gpGnf83Fh2aBI2LlLqXha3ZPnn
   DB_PORT:
