@@ -1,4 +1,0 @@
-[submodule "data/libsfw-corelib"]
-	path = data/libsfw-corelib
-	url = git@github.com:repasscloud/libsfw-corelib.git
-	branch = dev
