@@ -123,16 +123,6 @@ catch
 [System.Environment]::SetEnvironmentVariable("[7zip]", $null, 'Machine')
 
 
-# print current working directory
-[System.String]$CloneDir = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "lib\functions"
-test-path -path $CloneDir
-git clone https://github.com/repasscloud/libsfw-ps.git $CloneDir
-
-[System.String]$CloneDir = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "data\libsfw-corelib"
-test-path -path $CloneDir
-git clone --single-branch --branch dev https://github.com/repasscloud/libsfw-corelib.git $CloneDir
-
-
 # # get copy of uidlookup
 # (& git clone https://github.com/repasscloud/optechx.uidlookup.git C:\Projects\uidl) 2>&1>$null
 # & dotnet restore C:\Projects\uidl\uidlookup.csproj
