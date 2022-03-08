@@ -1,7 +1,0 @@
-[submodule "lib/functions"]
-	path = lib/functions
-	url = git@github.com:repasscloud/libsfw-ps.git
-[submodule "data/libsfw-corelib"]
-	path = data/libsfw-corelib
-	url = git@github.com:repasscloud/libsfw-corelib.git
-	branch = dev
