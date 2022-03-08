@@ -57,8 +57,7 @@ install:
 - ps: .\lib\ci-scripts\appveyor\01_init.ps1
 
 build_script:
-  - ps: |
-      (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+- ps: .\lib\ci-scripts\appveyor\02_build.ps1
 
 #       # uninstall Google Update Tool
 #       [System.String]$app_i = "Google Auto Update Tool"
