@@ -125,9 +125,11 @@ catch
 
 # print current working directory
 [System.String]$CloneDir = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "lib\functions"
+$CloneDir
 git clone https://github.com/repasscloud/libsfw-ps.git $CloneDir
 
 [System.String]$CloneDir = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "data\libsfw-corelib"
+$CloneDir
 git clone --single-branch --branch dev https://github.com/repasscloud/libsfw-corelib.git $CloneDir
 
 
