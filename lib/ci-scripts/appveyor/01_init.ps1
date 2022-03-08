@@ -124,7 +124,12 @@ catch
 
 
 # print current working directory
-git submodule update --init --recursive $PWD.Path
+[System.String]$CloneDir = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "lib\functions"
+git clone https://github.com/repasscloud/libsfw-ps.git $CloneDir
+
+[System.String]$CloneDir = Join-Path -Path $env:APPVEYOR_BUILD_FOLDER -ChildPath "data\libsfw-corelib"
+git clone --single-branch --branch dev https://github.com/repasscloud/libsfw-corelib.git $CloneDir
+
 
 # # get copy of uidlookup
 # (& git clone https://github.com/repasscloud/optechx.uidlookup.git C:\Projects\uidl) 2>&1>$null
