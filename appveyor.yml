@@ -44,7 +44,6 @@ environment:
   MC_URI:
     secure: ew9e/wrf2ID1kJVMCXZZ6BzhL8884qfKCTNl+j3m1ABpoh1AYEunyrB0yyEsqhYbYzPiQKRvg0SvDx8Gwa5V5A==
 install:
-- ps: git submodule update --init --recursive .
 - ps: .\lib\ci-scripts\appveyor\01_init.ps1
 build_script:
 - ps: .\lib\ci-scripts\appveyor\02_build.ps1
