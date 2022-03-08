@@ -1,0 +1,5 @@
+*.tmp
+mc-config.json
+_tmp/*
+var.ps1
+lib/functions/.git
