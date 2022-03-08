@@ -46,21 +46,7 @@ switch($version_regex -match ([System.Net.HttpWebRequest]::Create('https://www.m
 }
 
 <# NUSPEC PLACEHOLDER - DO NOT EDIT #>
-$d.meta.homepage = ""
-$d.meta.iconuri = ""
-$d.meta.copyright = "Copyright © 1998-$((Get-Date).ToString('yyyy')) Mozilla Foundation"
-$d.meta.license = ""
-$d.meta.docs = ""
-$d.meta.tags = ""
-$d.meta.summary = ""
-$d.meta.version = ""
 
-<# META EDITS - UPDATE AS REQUIRED #>
-$d.meta.rebootrequired = "No"        # 'YES' or 'NO' only
-$d.meta.depends = "None"             # Any depedencies
-$d.meta.category = "browser"         # Category name in lower case only
-$d.meta.xft = "mc"
-$d.meta.locale = "au-syd1-07"
 
 $d.id.name = "Firefox"
 $d.id.publisher = "Mozilla"
