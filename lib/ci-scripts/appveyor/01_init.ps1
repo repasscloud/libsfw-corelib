@@ -123,6 +123,9 @@ catch
 [System.Environment]::SetEnvironmentVariable("[7zip]", $null, 'Machine')
 
 
+# print current working directory
+$PWD
+
 # # get copy of uidlookup
 # (& git clone https://github.com/repasscloud/optechx.uidlookup.git C:\Projects\uidl) 2>&1>$null
 # & dotnet restore C:\Projects\uidl\uidlookup.csproj
