@@ -3,7 +3,7 @@ version: 1.1.{build}-{branch}
 branches:
   except:
   - dev
-shallow_clone: true
+shallow_clone: false
 clone_folder: C:\Projects\libsfw
 init:
 - ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
