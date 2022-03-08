@@ -124,7 +124,7 @@ catch
 
 
 # print current working directory
-$PWD
+git submodule update --init --recursive $PWD.Path
 
 # # get copy of uidlookup
 # (& git clone https://github.com/repasscloud/optechx.uidlookup.git C:\Projects\uidl) 2>&1>$null
