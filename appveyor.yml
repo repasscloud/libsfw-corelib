@@ -6,7 +6,6 @@ shallow_clone: true
 clone_folder: C:\Projects\libsfw
 init:
 - ps: echo $env:DCKR_PASS | docker login -u $env:DCKR_USR --password-stdin
-- cmd: git submodule update --init --recursive %APPVEYOR_BUILD_FOLDER%
 environment:
   APPS_CS_HOST:
     secure: 0LN4yVhDyvjhf/GohIQo2zjlu6HREy0+iPOqv2gpGnf83Fh2aBI2LlLqXha3ZPnn
@@ -45,6 +44,7 @@ environment:
   MC_URI:
     secure: ew9e/wrf2ID1kJVMCXZZ6BzhL8884qfKCTNl+j3m1ABpoh1AYEunyrB0yyEsqhYbYzPiQKRvg0SvDx8Gwa5V5A==
 install:
+- cmd: git submodule update --init --recursive %APPVEYOR_BUILD_FOLDER%
 - ps: .\lib\ci-scripts\appveyor\01_init.ps1
 build_script:
 - ps: .\lib\ci-scripts\appveyor\02_build.ps1
