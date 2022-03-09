@@ -59,6 +59,8 @@ install:
 build_script:
 - ps: .\lib\ci-scripts\appveyor\02_build.ps1
 
+on_finish:
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #       # uninstall Google Update Tool
 #       [System.String]$app_i = "Google Auto Update Tool"
 #       Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) UNINSTALLING ${app_i}"
