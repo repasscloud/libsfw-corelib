@@ -25,6 +25,6 @@ $adr_geo = "au-syd1-07"
 $adr_uninstallargs = "msi-void"
 
 <# GENERATE JSON MANIFEST #>
-Generate-JsonManifestV2 -Category $adr_category -Publisher $adr_publisher -Name $adr_name -Version $adr_version -Copyright $adr_copyright -LicenseAcceptRequired $adr_licenseacceptrequired `
+Export-JsonManifestV2 -Category $adr_category -Publisher $adr_publisher -Name $adr_name -Version $adr_version -Copyright $adr_copyright -LicenseAcceptRequired $adr_licenseacceptrequired `
 -Arch $adr_arch -ExecType $adr_exectype -RebootRequired $adr_rebootrequired -FollowUri $adr_followuri -InstallSwitches $adr_installswitches -DetectMethod Registry `
 -DisplayName $adr_displayname -RepoGeo $adr_geo -Locale $adr_locale -XFT $adr_xft -LCID $adr_lcid -UninstallProcess $adr_uninstallargs -NuspecUri $adr_nuspec -OutPath $PSScriptRoot
