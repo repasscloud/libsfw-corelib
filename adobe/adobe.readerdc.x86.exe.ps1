@@ -33,5 +33,5 @@ Export-JsonManifestV2 -Category $adr_category `
 -ExecType $adr_exectype `
 -FollowUri $adr_followuri `
 -LCID $adr_lcid `
--OutPath 'C:\Users\akris\Projects\libsfw\data\libsfw-corelib\adobe' `
+-OutPath $PSScriptRoot `
 -NuspecUri 'https://github.com/open-circle-ltd/chocolatey.adobe-acrobat-reader-dc/raw/master/package/adobereader.nuspec'
