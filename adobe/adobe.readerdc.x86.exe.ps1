@@ -3,9 +3,9 @@
 $userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
 
 <# APP SPECIFIC CODE - DO NOT EDIT #>
-$adr_regex = "https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/continuous*"
+$adr_regex = '^.*https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/continuous.*'
 $adr_uri = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
-$adr_version = ((Invoke-WebRequest -Uri $adr_uri -UserAgent $userAgent -UseBasicParsing).Links | Where-Object {$_.href -like $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(21.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1'
+$adr_version = ((Invoke-WebRequest -Uri $adr_uri -UserAgent $userAgent -UseBasicParsing).Links | Where-Object {$_.href -match $adr_regex} | Where-Object -FilterScript {$_.outerHTML -match '^.*DC.*\(22.*'} | Select-Object -First 1).outerHTML -replace '.*([0-9]{2}\.[0-9]{3}\.[0-9]{5}).*','$1'
 $adr_publisher = "Adobe"
 $adr_name = "Acrobat Reader DC"
 $adr_copyright = "Copyright © 1984-2018 Adobe Systems Incorporated and its licensors"
