@@ -36,4 +36,4 @@ Export-JsonManifestV2 -Category $adr_category `
 -OutPath $PSScriptRoot `
 -NuspecUri 'https://github.com/open-circle-ltd/chocolatey.adobe-acrobat-reader-dc/raw/master/package/adobereader.nuspec'
 
-Get-ChildItem -Path $PSScriptRoot
+Get-Content -Path $PSScriptRoot\adobe.acrobatreaderdc_21.011.20039_x86_exe_MUI.json
