@@ -35,3 +35,5 @@ Export-JsonManifestV2 -Category $adr_category `
 -LCID $adr_lcid `
 -OutPath $PSScriptRoot `
 -NuspecUri 'https://github.com/open-circle-ltd/chocolatey.adobe-acrobat-reader-dc/raw/master/package/adobereader.nuspec'
+
+Get-ChildItem -Path $PSScriptRoot
