@@ -1,0 +1,16 @@
+image: Visual Studio 2017
+version: libsfw2-{build}
+
+shallow_clone: false
+clone_folder: C:\Projects\libsfw2
+
+environment:
+  matrix:
+    - TYPE: "win-x64-installer"
+
+install:
+- git submodule update --init --recursive
+- ps: .\private\ci-tools\remove-apps.ps1
+- git clone -q --branch=main https://github.com/danijeljw-RPC/optechx.DownloadFile.git C:\Projects\optechx.DownloadFile
+- ps: .\private\ci-tools\install-tools.ps1
+
