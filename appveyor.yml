@@ -14,3 +14,5 @@ install:
 - git clone -q --branch=main https://github.com/danijeljw-RPC/optechx.DownloadFile.git C:\Projects\optechx.DownloadFile
 - ps: .\private\ci-tools\install-tools.ps1
 
+build_script:
+- ps: Write-Host "build script"
