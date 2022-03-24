@@ -30,3 +30,5 @@ foreach ($sf in $SourceFiles)
       -OutPath $PSScriptRoot `
       -NuspecUri $adr_nuspec
 }
+
+Get-ChildItem -Path .\public -Filter "*.json" -File | ForEach-Object { Get-Contetent -Path $_.FullName }
