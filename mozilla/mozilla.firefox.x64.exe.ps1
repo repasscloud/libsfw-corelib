@@ -3,8 +3,8 @@
 $userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
 
 <# APP SPECIFIC CODE - DO NOT EDIT #>
-$adr_regex = '^.*https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/continuous.*'
-$adr_uri = "https://helpx.adobe.com/acrobat/release-note/release-notes-acrobat-reader.html"
+$adr_regex = [System.String]::Empty
+$adr_uri = [System.String]::Empty
 $adr_version = ([System.Net.HttpWebRequest]::Create('https://www.mozilla.org/en-US/firefox/notes/').GetResponse().ResponseUri.AbsoluteUri).Split('/')[5]
 $adr_publisher = "Mozilla"
 $adr_name = "Firefox"
