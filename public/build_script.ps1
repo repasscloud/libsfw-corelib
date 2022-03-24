@@ -7,7 +7,7 @@ foreach ($sf in $SourceFiles)
     . $sf
 
     <# GENERATE JSON MANIFEST #>
-    $JsonDataPayload = Export-JsonManifest -Category $adr_category `
+    Export-JsonManifest -Category $adr_category `
       -Publisher $adr_publisher `
       -Name $adr_name `
       -Version $adr_version `
@@ -26,6 +26,4 @@ foreach ($sf in $SourceFiles)
       -RepoGeo $adr_geo `
       -OutPath $PSScriptRoot `
       -NuspecUri $adr_nuspec
-
-    Get-Content -Path $JsonDataPayload
 }
