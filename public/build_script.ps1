@@ -3,7 +3,7 @@ foreach ($sf in $SourceFiles)
 {
     . $sf
     <# GENERATE JSON MANIFEST #>
-    Export-JsonManifestV2 -Category $adr_category `
+    Export-JsonManifest -Category $adr_category `
     -Publisher $adr_publisher `
     -Name $adr_name `
     -Version $adr_version `
