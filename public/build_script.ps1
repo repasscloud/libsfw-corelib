@@ -1,4 +1,5 @@
 Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER\libsfw-ps -Filter "Export-JsonManifest.ps1" -File | ForEach-Object { . $_.FullName }
+Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER\libsfw-ps -Filter "Get-AbsoluteUri.ps1" -File | ForEach-Object { . $_.FullName }
 [System.String[]]$SourceFiles = Get-ChildItem -Path .\data\corelib\ -Filter "*.ps1" -File -Recurse | Select-Object -ExpandProperty FullName
 foreach ($sf in $SourceFiles)
 {
