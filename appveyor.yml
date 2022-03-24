@@ -18,5 +18,5 @@ build_script:
 - ps: |
     Get-ChildItem -Path .\libsfw-ps -Filter "*.ps1" -File | ForEach-Object {
       . $_.FullName
-      Write-Output "Imported function: $($_.FullName)"
+      Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) IMPORTED FUNCTION: $($_.FullName)"
     }
