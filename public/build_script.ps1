@@ -32,4 +32,4 @@ foreach ($sf in $SourceFiles)
       -NuspecUri $adr_nuspec
 }
 
-Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -File -Recuse | ForEach-Object { Get-Content -Path $_.FullName }
+Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -File -Recurse | ForEach-Object { Get-Content -Path $_.FullName }
