@@ -17,6 +17,4 @@ install:
 
 
 build_script:
-- ps: |
-    [System.String[]]$SourceFiles = Get-ChildItem -Path .\data\corelib\ -Filter "*.ps1" -File -Recurse | Select-Object -ExpandProperty FullName
-    $SourceFiles
+- ps: .\public\build_script.ps1
