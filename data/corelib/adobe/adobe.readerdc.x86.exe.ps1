@@ -23,15 +23,3 @@ $adr_installswitches = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOP
 $adr_displayname = "Adobe Acrobat Reader DC MUI"  # OPTIONAL
 $adr_geo = "au-syd1-07"
 $adr_uninstallargs = "msi-void"
-
-<# GENERATE JSON MANIFEST #>
-Export-JsonManifestV2 -Category $adr_category `
--Publisher $adr_publisher `
--Name $adr_name `
--Version $adr_version `
--Arch $adr_arch `
--ExecType $adr_exectype `
--FollowUri $adr_followuri `
--LCID $adr_lcid `
--OutPath $PSScriptRoot `
--NuspecUri 'https://github.com/open-circle-ltd/chocolatey.adobe-acrobat-reader-dc/raw/master/package/adobereader.nuspec'
