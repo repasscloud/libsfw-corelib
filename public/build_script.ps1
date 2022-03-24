@@ -7,7 +7,7 @@ foreach ($sf in $SourceFiles)
     . $sf
 
     <# GENERATE JSON MANIFEST #>
-    Export-JsonManifest -Category $adr_category `
+    $JsonDataPayload = Export-JsonManifest -Category $adr_category `
       -Publisher $adr_publisher `
       -Name $adr_name `
       -Version $adr_version `
@@ -27,5 +27,5 @@ foreach ($sf in $SourceFiles)
       -OutPath $PSScriptRoot `
       -NuspecUri $adr_nuspec
 
-    Get-Content -Path $PSScriptRoot\*.json
+    Get-Content -Path $JsonDataPayload
 }
