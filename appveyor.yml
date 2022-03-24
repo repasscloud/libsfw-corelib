@@ -15,5 +15,8 @@ install:
 - ps: .\private\ci-tools\install-tools.ps1
 - ps: .\private\ci-tools\load-functions.ps1
 
+
 build_script:
-- ps: Write-Output "Build script goes here"
+- ps: |
+    [System.String[]]$SourceFiles = Get-ChildItem -Path .\data\corelib\ -Filter "*.ps1" -File -Recurse | Select-Object -ExpandProperty FullName
+    $SourceFiles
