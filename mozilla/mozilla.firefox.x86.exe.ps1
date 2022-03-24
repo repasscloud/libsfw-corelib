@@ -15,7 +15,7 @@ $adr_rebootrequired = $false
 $adr_category = "Internet"
 $adr_xft = "mc"
 $adr_locale = "au-syd1-07"
-$adr_arch = "x64"
+$adr_arch = "x86"
 $adr_lcid = "MUI"
 $adr_exectype = "exe"
 $adr_followuri = 'https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US'
