@@ -16,7 +16,7 @@ $adr_category = "Internet"
 $adr_xft = "mc"
 $adr_locale = "au-syd1-07"
 $adr_arch = "x86"
-$adr_lcid = "MUI"
+$adr_lcid = "en-US"
 $adr_exectype = "exe"
 $adr_followuri = 'https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US'
 $adr_installswitches = "-ms -ma"  # used for backwards compatability
