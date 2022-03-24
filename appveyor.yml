@@ -13,8 +13,11 @@ install:
 - ps: .\private\ci-tools\remove-apps.ps1
 - git clone -q --branch=main https://github.com/danijeljw-RPC/optechx.DownloadFile.git C:\Projects\optechx.DownloadFile
 - ps: .\private\ci-tools\install-tools.ps1
-- ps: .\private\ci-tools\load-functions.ps1
+#- ps: .\private\ci-tools\load-functions.ps1
 
 
 build_script:
-- ps: .\public\build_script.ps1
+- ps: |
+    .\private\ci-tools\load-functions.ps1
+
+    .\public\build_script.ps1
