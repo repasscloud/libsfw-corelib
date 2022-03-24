@@ -19,5 +19,4 @@ install:
 build_script:
 - ps: |
     .\private\ci-tools\load-functions.ps1
-
     .\public\build_script.ps1
