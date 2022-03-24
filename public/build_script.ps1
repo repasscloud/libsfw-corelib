@@ -27,5 +27,5 @@ foreach ($sf in $SourceFiles)
       -OutPath $PSScriptRoot `
       -NuspecUri $adr_nuspec
 
-    $JsonDataPayload
+    Get-Content -Path $JsonDataPayload
 }
