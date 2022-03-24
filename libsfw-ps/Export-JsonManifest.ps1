@@ -211,7 +211,7 @@ function Export-JsonManifest {
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) JSON MANIFEST OUTPUT: [ ${OutFilePath} ]"
         #endregion BUILD JSON
 
-        return $OutFIlePath
+        return $OutFilePath
     }
     
     end {
