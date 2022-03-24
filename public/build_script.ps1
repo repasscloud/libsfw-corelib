@@ -31,4 +31,4 @@ foreach ($sf in $SourceFiles)
       -NuspecUri $adr_nuspec
 }
 
-Get-ChildItem -Path .\public -Filter "*.json" -File | ForEach-Object { Get-Contetent -Path $_.FullName }
+Get-ChildItem -Path .\public -Filter "*.json" -File | ForEach-Object { Get-Content -Path $_.FullName }
