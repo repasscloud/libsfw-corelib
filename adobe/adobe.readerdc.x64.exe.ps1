@@ -23,3 +23,6 @@ $adr_installswitches = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOP
 $adr_displayname = "Adobe Acrobat Reader DC MUI"  # OPTIONAL
 $adr_geo = "au-syd1-07"
 $adr_uninstallargs = "msi-void"
+
+
+$adr_followuri
