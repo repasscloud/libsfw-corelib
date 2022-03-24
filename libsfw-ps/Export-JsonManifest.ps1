@@ -117,16 +117,7 @@ function Export-JsonManifest {
             }
             catch {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) FOLLOW URI NOT FOUND: [ ${FollowUri} ]"
-                $Body = @{
-                    title  = "FollowUri Not Found: ${Key}"
-                    body   = "FollowUri not found: $FollowUri`r`n`r`n${UID}"
-                    labels = @("ci-followuri-not-found")
-                } | ConvertTo-Json
-                $Headers = @{Authorization = 'token ' + $env:GH_TOKEN}
-                $owner = "repasscloud"
-                $repository = "libsfw2"
-                $NewIssue = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$owner/$repository/issues" -Body $Body -Headers $Headers -ContentType "application/json"
-                $NewIssue.html_url
+                New-GitHubIssue -Title "FollowUri Not Found: ${Key}" -Body "FollowUri not found: $FollowUri`r`n`r`n${UID}" -Labels @("ci-followuri-not-found") -Repository 'libsfw2' -Token $env:GH_TOKEN
                 exit 1
             }
         }
