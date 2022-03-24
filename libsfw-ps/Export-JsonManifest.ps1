@@ -1,7 +1,9 @@
 function Export-JsonManifest {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)][ValidateSet("Productivity")][System.String]$Category,      #^ select from categories
+        [Parameter(Mandatory=$true)]
+            [ValidateSet("Productivity","Internet")]
+            [System.String]$Category,                                                           #^ select from categories
         [Parameter(Mandatory=$true)][System.String]$Publisher,                                  #^ publisher name
         [Parameter(Mandatory=$true)][System.String]$Name,                                       #^ application name
         [Parameter(Mandatory=$true)][System.String]$Version,                                    #^ application version
