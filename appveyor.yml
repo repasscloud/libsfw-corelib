@@ -15,4 +15,8 @@ install:
 - ps: .\private\ci-tools\install-tools.ps1
 
 build_script:
-- ps: Get-ChildItem -Path .\libsfw-ps -Filter "*.ps1" -File | ForEach-Object { . $_.FullName; $_.FullName }
+- ps: |
+    Get-ChildItem -Path .\libsfw-ps -Filter "*.ps1" -File | ForEach-Object {
+      . $_.FullName
+      Write-Output "Imported function: $($_.FullName)"
+    }
