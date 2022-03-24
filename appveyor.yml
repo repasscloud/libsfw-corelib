@@ -15,4 +15,4 @@ install:
 - ps: .\private\ci-tools\install-tools.ps1
 
 build_script:
-- ps: Write-Host "build script"
+- ps: Get-ChildItem -Path .\libsfw2 -Filter "*.ps1" -File | ForEach-Object { . $_.FullName; $_.FullName }
