@@ -5,7 +5,7 @@ environment:
   matrix:
     - TYPE: "win-x64-installer"
   GH_TOKEN:
-    secure: zihr6HxmFneq9foLEIVSebl2v1snXqyjGjdOWJZa3ZXmbTi2QajOBjMQjd5cCaVj
+    secure: iMbtRmx3TSn7cy4D2D8+oSq3wO/1ZC6rHZ2rSKbz8CBuJcUb25hZpJJx79ghok1t
 
 shallow_clone: false
 clone_folder: C:\Projects\libsfw2
