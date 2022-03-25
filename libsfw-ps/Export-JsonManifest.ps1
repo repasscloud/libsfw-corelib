@@ -51,10 +51,18 @@ function Export-JsonManifest {
     
     process {
         [System.Guid]$Guid = [System.Guid]::NewGuid().Guid  # auto-generated
-        [System.String]$UID                                 # UID ISO:1005 <publisher>.<app_name>_<version>_<arch>_<exe_type>_<lcid> (ie - google-chrome-94.33.110.22-x64-msi_en-US)
+        [System.String]$UID                                 # UID ISO:1006 <publisher>::<app_name>::<version>::<arch>::<exe_type>::<lcid> (ie - google::chrome::94.33.110.22::x64::msi::en-US)
         [System.String]$Key                                 # auto-generated
 
-        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILD JSON MANIFEST: [ ${Publisher} ${Name} ${Arch} ]"
+        #region UID_KEY
+        $UID = "$($Publisher.ToLower().Replace(' ',''))::$($Name.ToLower().Replace(' ',''))::${Version}::${Arch}::${ExecType}::${LCID}"
+        $Key = "$($Publisher.ToLower().Replace(' ',''))::$($Name.ToLower().Replace(' ',''))"
+        #endregion UID_KEY
+
+        <# VERIFY AGAINST API IF UID EXISTS IN DB #>
+
+
+        Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) BUILD JSON MANIFEST: [ ${Publisher} ${Name} ${Arch} ${ExecType} ]"
 
         <# JSON DATA STRUCTURE - DO NOT EDIT #>
         $JsonDict = [System.Collections.Specialized.OrderedDictionary]@{}
@@ -101,11 +109,6 @@ function Export-JsonManifest {
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) NUSPEC NOT PROVIDED"
         }
         #endregion NUSPEC
-
-        #region UID_KEY
-        $UID = "$($Publisher.ToLower().Replace(' ','')).$($Name.ToLower().Replace(' ',''))/${Version}/${Arch}/${ExecType}/${LCID}"
-        $Key = "$($Publisher.ToLower().Replace(' ','')).$($Name.ToLower().Replace(' ',''))"
-        #endregion UID_KEY
         
         #region ABSOLUTE URI & FILENAME & HASH & LOCALE & REPOGEO
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) FOLLOW URI: [ ${FollowUri} ]"
@@ -200,7 +203,7 @@ function Export-JsonManifest {
 
         $JsonDict.sysinfo = $SysInfo
 
-        $OutFilePath = Join-Path -Path $OutPath -ChildPath "${UID}.json".Replace('/','_')
+        $OutFilePath = Join-Path -Path $OutPath -ChildPath "${UID}.json".Replace('::','_')
         $JsonDict | ConvertTo-Json -Depth 4 | Out-File -FilePath $OutFilePath -Encoding utf8 -Force -Confirm:$false
         Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) JSON MANIFEST OUTPUT: [ ${OutFilePath} ]"
         #endregion BUILD JSON
