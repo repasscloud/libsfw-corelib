@@ -20,6 +20,7 @@ foreach ($sf in $SourceFiles)
       -Arch $adr_arch `
       -ExecType $adr_exectype `
       -FollowUri $adr_followuri `
+      -AbsoluteUri $adr_absoluteuri `
       -InstallSwitches $adr_installswitches `
       -DisplayName $adr_displayname `
       -UninstallArgs $adr_uninstallargs `
