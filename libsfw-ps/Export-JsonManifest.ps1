@@ -144,7 +144,8 @@ function Export-JsonManifest {
         catch
         {
             "$([System.Char]::ConvertFromUTF32("0x1F534")) UNABLE TO DOWNLOAD FILE"
-            exit 1
+            [System.String]$GHIssueNumber = New-GitHubIssue -Title "Unable to download file: ${UID}" -Body "File not downloaded using odf: $FileName`r`n`r`nUID: ${UID}" -Labels @("ci-file-not-downloaded") -Repository 'libsfw-ps' -Token $env:GH_TOKEN
+            return
         }
 
         # Write-Output "Env Path is: $($env:PATH)"
