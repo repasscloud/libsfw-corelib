@@ -117,7 +117,8 @@ function Export-JsonManifest {
             }
             catch {
                 Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) FOLLOW URI NOT FOUND: [ ${FollowUri} ]"
-                New-GitHubIssue -Title "FollowUri Not Found: ${UID}" -Body "FollowUri Not Found: $FollowUri`r`n`r`nUID: ${UID}" -Labels @("ci-followuri-not-found") -Repository 'libsfw2' -Token $env:GH_TOKEN
+                [System.String]$GHIssueNumber = New-GitHubIssue -Title "FollowUri Not Found: ${UID}" -Body "FollowUri Not Found: $FollowUri`r`n`r`nUID: ${UID}" -Labels @("ci-followuri-not-found") -Repository 'libsfw2' -Token $env:GH_TOKEN
+                Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) GH Issue: ${GHIssueNumber}"
                 return
             }
         }
