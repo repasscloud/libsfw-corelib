@@ -134,7 +134,6 @@ function Export-JsonManifest {
             $FileName = [System.Web.HttpUtility]::UrlDecode($(Split-Path -Path $AbsoluteUri -Leaf))
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) FILENAME: [ ${FileName} ]"
             $WebRequestQuery = [System.Net.HttpWebRequest]::Create($AbsoluteUri)
-            $WebRequestQuery.Method
             $WebRequest = $WebRequestQuery.GetResponse()
             $DLFileBytesSize = $WebRequest.ContentLength
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) DOWNLOAD FILE: [ ${FileName} ]"
