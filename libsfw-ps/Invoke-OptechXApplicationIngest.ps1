@@ -35,7 +35,7 @@ function Invoke-OXAppIngest {
             'en-US' { $langID = 2 }
         }
         <# SET CPUARCHID #>
-        switch($data.id.arch)
+        switch($JsonData.id.arch)
         {
             'x86' { $cpuarchID = 1 }
             'x64' { $cpuarchID = 2 }
@@ -43,7 +43,7 @@ function Invoke-OXAppIngest {
             'arm64' { $cpuarchID = 4 }
         }
         <# SET EXECID #>
-        switch($data.install.exectype)
+        switch($JsonData.install.exectype)
         {
             'msi' { $execID = 1 }
             'msix' { $execID = 2 }
@@ -53,7 +53,7 @@ function Invoke-OXAppIngest {
             'cmd' { $execID = 6 }
         }
 
-        $Body = @{
+        $Body = [System.Collections.Specialized.OrderedDictionary]@{
             id = 0
             uuid = $JsonData.guid
             uid = $JsonData.id.uid
@@ -74,17 +74,17 @@ function Invoke-OXAppIngest {
             executableId = $execID
             installCmd = $JsonData.meta.filename
             installArgs = $JsonData.install.installswitches
-            installScript = $null
-            displayName = $null
-            displayPublisher = $null
-            displayVersion = $null
-            packageDetectionId = $data 
-            detectScript = $null
+            installScript = "no_value"
+            displayName = "no_value"
+            displayPublisher = "no_value"
+            displayVersion = "no_value"
+            packageDetectionId = "no_value"
+            detectScript = "no_value"
             detectValue = $JsonData.install.detectvalue
             uninstallProcessId = $JsonData.uninstall.process #needs ID
             uninstallCmd = $JsonData.uninstall.string
             uninstallArgs = $JsonData.uninstall.args
-            uninstallScript = $null
+            uninstallScript = "no_value"
             homepage = $JsonData.meta.homepage
             icon = $JsonData.meta.iconuri
             docs = $JsonData.meta.docs
