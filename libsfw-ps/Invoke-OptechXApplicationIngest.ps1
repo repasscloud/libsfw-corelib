@@ -53,7 +53,7 @@ function Invoke-OXAppIngest {
             'cmd' { $execID = 6 }
         }
 
-        $Body = [System.Collections.Specialized.OrderedDictionary]@{
+        $Body = @{
             id = 0
             uuid = $JsonData.guid
             uid = $JsonData.id.uid
