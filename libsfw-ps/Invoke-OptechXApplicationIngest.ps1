@@ -2,7 +2,7 @@ function Invoke-OXAppIngest {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true)][System.String]$JsonPayload,
-        [Parameter(Mandatory=$false)][System.String]$BaseUri='http://localhost:8080'
+        [Parameter(Mandatory=$false)][System.String]$BaseUri='https://engine.api.dev.optechx-data.com'
     )
     
     begin {
