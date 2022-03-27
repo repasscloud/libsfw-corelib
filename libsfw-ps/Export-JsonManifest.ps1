@@ -65,7 +65,7 @@ function Export-JsonManifest {
         $CHeaders = @{accept = 'text/json'}
         try
         {
-            Invoke-RestMethod -Uri "${env:API_BASE_URI}/api/Application/uid/${UID}" -Method Get -Headers $CHeaders -ErrorAction Stop
+            Invoke-RestMethod -Uri "${env:API_BASE_URI}/api/Application/uid/${UID}" -Method Get -Headers $CHeaders -ErrorAction Stop | Out-Null
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) APPLICATION MATCHED: [ ${UID} ]"
             # go to end, nothing left to do!
         }
