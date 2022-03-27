@@ -1,1 +1,2 @@
-# libsfw2
+# libsfw-corelib
+Library of Software Packages Core Library
