@@ -19,7 +19,8 @@ function Export-JsonManifest {
         [System.String]$DisplayName=[System.String]::Empty,                                     #% registry display name (should be provided to identify)
         [System.String]$DisplayPublisher=[System.String]::Empty,                                #% registry display publisher
         [System.String]$DisplayVersion=[System.String]::Empty,                                  #% registry display version
-        [ValidateSet("Registry","FileVersion","File")][System.String]$DetectMethod="Registry",  # how is app detected (registry, fileversion, filematched)
+        [ValidateSet("Registry","FileVersion","File","Script")]
+            [System.String]$DetectMethod="Registry",                                            # how is app detected (registry, fileversion, filematched, script)
         [System.String]$DetectValue=[System.String]::Empty,                                     # the value for the type
         [System.String]$UninstallProcess=[System.String]::Empty,                                #% exe, exe2, msi, etc
         [System.String]$UninstallString=[System.String]::Empty,                                 #% how is the uninstall proceessed (used in conjunction with above)
@@ -33,14 +34,15 @@ function Export-JsonManifest {
         [System.Boolean]$RebootRequired=$false,                                                 # is a reboot required
         [Parameter(Mandatory=$true)][System.String]$LCID,                                       #^ language being supported here
         [ValidateSet("mc","ftp","http","other")][System.String]$XFT,                            # transfer protocol (mc, ftp, http, etc)
-        [ValidateSet("au-syd1-07")][System.String]$Locale="au-syd1-07",                         # 
+        [System.String]$Locale="au-syd1-07",                                                    # 
         [System.String]$RepoGeo=[System.String]::Empty,                                         # 
         [System.String]$Uri_Path=[System.String]::Empty,                                        # 
         [System.Boolean]$Enabled=$true,                                                         # 
         [System.String[]]$DependsOn=[System.String]::Empty,                                     # 
         [System.String]$NuspecUri=[System.String]::Empty,                                       # 
         [System.Version]$SysInfo="4.5.0.0",                                                     # JSON Specification
-        [Parameter(Mandatory=$true)][System.String]$OutPath                                     #^ 
+        [Parameter(Mandatory=$true)][System.String]$OutPath,                                    #^ 
+        [System.String]$ApiBaseURI="http://localhost:8080"
     )
     
     begin {
@@ -63,8 +65,9 @@ function Export-JsonManifest {
         $Headers = @{accept = 'text/json'}
         try
         {
-            Invoke-RestMethod -Uri "https://dev-dn6-api.optechx.com/api/Application/${UID}" -Method Get -Headers $Headers -ErrorAction Stop
+            Invoke-RestMethod -Uri "https://${ApiBaseURI}/api/Application/${UID}" -Method Get -Headers $Headers -ErrorAction Stop
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) APPLICATION MATCHED: [ ${UID} ]"
+            # go to end, nothing left to do!
         }
         catch
         {
@@ -76,6 +79,7 @@ function Export-JsonManifest {
             $JsonDict.meta = [System.Collections.Specialized.OrderedDictionary]@{}
             $JsonDict.install = [System.Collections.Specialized.OrderedDictionary]@{}
             $JsonDict.uninstall = [System.Collections.Specialized.OrderedDictionary]@{}
+            $JsonDict.security = [System.Collections.Specialized.OrderedDictionary]@{}
             $JsonDict.sysinfo = [System.Collections.Specialized.OrderedDictionary]@{}
 
             #region NUSPEC
@@ -120,11 +124,13 @@ function Export-JsonManifest {
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E1")) FOLLOW URI: [ ${FollowUri} ]"
             if (-not($AbsoluteUri))
             {
-                try {
+                try
+                {
                     $AbsoluteUri = Get-AbsoluteUri -Uri $FollowUri -ErrorAction Stop
                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) ABSOLUTE URI MATCH"
                 }
-                catch {
+                catch
+                {
                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E0")) FOLLOW URI NOT FOUND: [ ${FollowUri} ]"
                     [System.String]$GHIssueNumber = New-GitHubIssue -Title "FollowUri Not Found: ${UID}" -Body "FollowUri Not Found: $FollowUri`r`n`r`nUID: ${UID}" -Labels @("ci-followuri-not-found") -Repository 'libsfw2' -Token $env:GH_TOKEN
                     Write-Output "$([System.Char]::ConvertFromUTF32("0x1F534")) GH Issue: ${GHIssueNumber}"
@@ -159,7 +165,11 @@ function Export-JsonManifest {
             #Invoke-WebRequest -Uri "$AbsoluteUri" -OutFile "$env:TMP\$FileName" -UseBasicParsing
             $SHA256 = Get-FileHash -Path "$env:TMP\$FileName" -Algorithm SHA256 | Select-Object -ExpandProperty Hash
             $Uri_Path = "apps/${Publisher}/${Name}/${Version}/${Arch}/${FileName}"
-            #region ABSOLUTE URI & FILENAME & HASH & LOCALE & REPOGEO
+            #endregion ABSOLUTE URI & FILENAME & HASH & LOCALE & REPOGEO
+
+            #region Security Scans
+            $VTScanResultsId = New-VirusTotalScan -ApiKey $env:VT_API_KEY -FilePath "$env:TMP\$FileName" -BaseUri $env:API_BASE_URI
+            #endregion Security Scans
 
             #region BUILD JSON
             $JsonDict.guid = $Guid.ToString()
@@ -206,6 +216,9 @@ function Export-JsonManifest {
             $JsonDict.uninstall.process = $UninstallProcess
             $JsonDict.uninstall.string = $UninstallString
             $JsonDict.uninstall.args = $UninstallArgs
+
+            $JsonDict.security.virustotalscanresultsid = $VTScanResultsId
+            $JsonDict.security.exploitreportid = 0
 
             $JsonDict.sysinfo = $SysInfo
 
