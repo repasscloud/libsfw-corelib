@@ -1,5 +1,5 @@
 <# LOAD FUNCTIONS #>
-[System.String[]]$Functions = "Export-JsonManifest.ps1","Get-AbsoluteUri.ps1","New-GitHubIssue.ps1","New-VirusTotalScan.ps1"
+[System.String[]]$Functions = "Export-JsonManifest.ps1","Get-AbsoluteUri.ps1","New-GitHubIssue.ps1","New-VirusTotalScan.ps1","Invoke-OptechXApplicationIngest.ps1"
 foreach ($function in $Functions)
 {
   Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER\libsfw-ps -Filter "${function}" -File | ForEach-Object { . $_.FullName }
@@ -35,4 +35,7 @@ foreach ($sf in $SourceFiles)
       -NuspecUri $adr_nuspec
 }
 
-Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -File -Recurse | ForEach-Object { $_.FullName; Get-Content -Path $_.FullName }
+Get-ChildItem -Path $env:APPVEYOR_BUILD_FOLDER -Filter "*.json" -File -Recurse | ForEach-Object {
+  $_.FullName
+  Invoke-OXAppIngest -BaseUri $env:API_BASE_URI -JsonPayload $_.FullName
+}

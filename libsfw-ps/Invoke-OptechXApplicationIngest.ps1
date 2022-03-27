@@ -1,11 +1,12 @@
 function Invoke-OXAppIngest {
     [CmdletBinding()]
     param (
-        [System.String]$JsonPayload
+        [Parameter(Mandatory=$true)][System.String]$JsonPayload,
+        [Parameter(Mandatory=$false)][System.String]$BaseUri='http://localhost:8080'
     )
     
     begin {
-        
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
     }
     
     process {
@@ -51,10 +52,8 @@ function Invoke-OXAppIngest {
             'ps1' { $execID = 5 }
             'cmd' { $execID = 6 }
         }
-        <# GET VIRUS RESPONSE #>
-        $VTScanResults = New-VirusTotalScan -SHA256 $JsonData.meta.sha256 -FileName $JsonData.meta.filename
 
-        $ApiPayload = @{
+        $Body = @{
             id = 0
             uuid = $JsonData.guid
             uid = $JsonData.id.uid
@@ -97,9 +96,11 @@ function Invoke-OXAppIngest {
             uriPath = $JsonData.meta.uripath
             enabled = $JsonData.meta.enabled
             dependsOn = $JsonData.meta.dependson
-            virusTotalScanResults = 0
+            virusTotalScanResults = $JsonData.security.virustotalscanresultsid.id
             exploitReportId = 0
-        }
+        } | ConvertTo-Json
+
+        Invoke-RestMethod -Uri "${BaseUri}/api/Application" -Method Post -UseBasicParsing -Body $Body -ContentType "application/json" -ErrorAction Stop
     }
     
     end {
