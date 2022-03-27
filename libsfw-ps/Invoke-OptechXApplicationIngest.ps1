@@ -27,12 +27,14 @@ function Invoke-OXAppIngest {
             'Education' { $catID = 9 }
             'Internet' { $catID = 10 }
             'Lifestyle' { $catID = 11 }
+            Default { $catID = 0 }
         }
         <# SET LANGID #>
         switch($JsonData.id.lcid)
         {
             'MUI' { $langID = 1 }
             'en-US' { $langID = 2 }
+            Default { $langID = 0 }
         }
         <# SET CPUARCHID #>
         switch($JsonData.id.arch)
@@ -41,6 +43,7 @@ function Invoke-OXAppIngest {
             'x64' { $cpuarchID = 2 }
             'arm86' { $cpuarchID = 3 }
             'arm64' { $cpuarchID = 4 }
+            Default { $cpuarchID = 0}
         }
         <# SET EXECID #>
         switch($JsonData.install.exectype)
@@ -51,6 +54,35 @@ function Invoke-OXAppIngest {
             'bat' { $execID = 4 }
             'ps1' { $execID = 5 }
             'cmd' { $execID = 6 }
+            Default { $execID = 0 }
+        }
+        <# SET XFTID #>
+        switch($JsonData.meta.xft)
+        {
+            'mc' { $xftID = 1 }
+            'ftp' { $xftID = 2 }
+            'sftp' { $xftID = 3 }
+            'ftpes' { $xftID = 4 }
+            'http' { $xftID = 5 }
+            'https' { $xftID = 6 }
+            's3' { $xftID = 7 }
+            Default { $xftID = 0 }
+        }
+        <# SET UNINSTID #>
+        switch($JsonData.uninstall.process)
+        {
+            'msi' { $uninstID = 1 }
+            'exe' { $uninstID = 2 }
+            'exe2' { $uninstID = 3 }
+            'inno' { $uninstID = 4 }
+            'script' { $uninstID = 5 }
+            Default { $uninstID = 0 }
+        }
+        <# SET GEOID #>
+        switch($JsonData.meta.locale)
+        {
+            'au-syd1-07' { $geoID = 1 }
+            Default { $geoID = 0 }
         }
 
         $Body = @{
@@ -78,10 +110,10 @@ function Invoke-OXAppIngest {
             displayName = "no_value"
             displayPublisher = "no_value"
             displayVersion = "no_value"
-            packageDetectionId = "no_value"
+            packageDetectionId = 0
             detectScript = "no_value"
             detectValue = $JsonData.install.detectvalue
-            uninstallProcessId = $JsonData.uninstall.process #needs ID
+            uninstallProcessId = $uninstID
             uninstallCmd = $JsonData.uninstall.string
             uninstallArgs = $JsonData.uninstall.args
             uninstallScript = "no_value"
@@ -91,12 +123,12 @@ function Invoke-OXAppIngest {
             license = $JsonData.meta.license
             tags = $JsonData.meta.tags
             summary = $JsonData.meta.summary
-            transferMethodId = $JsonData.meta.xft
-            localeId = $JsonData.meta.locale  # needs ID
+            transferMethodId = $xftID
+            localeId = $geoID
             uriPath = $JsonData.meta.uripath
             enabled = $JsonData.meta.enabled
             dependsOn = $JsonData.meta.dependson
-            virusTotalScanResults = $JsonData.security.virustotalscanresultsid.id
+            virusTotalScanResultsId = $JsonData.security.virustotalscanresultsid.id
             exploitReportId = 0
         } | ConvertTo-Json
 
@@ -104,6 +136,6 @@ function Invoke-OXAppIngest {
     }
     
     end {
-        [System.Gc]::Collect()
+        [System.GC]::Collect()
     }
 }
