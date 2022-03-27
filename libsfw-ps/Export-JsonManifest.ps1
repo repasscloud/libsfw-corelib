@@ -62,10 +62,10 @@ function Export-JsonManifest {
         #endregion UID_KEY
 
         <# VERIFY AGAINST API IF UID EXISTS IN DB #>
-        $Headers = @{accept = 'text/json'}
+        $CHeaders = @{accept = 'text/json'}
         try
         {
-            Invoke-RestMethod -Uri "https://${ApiBaseURI}/api/Application/${UID}" -Method Get -Headers $Headers -ErrorAction Stop
+            Invoke-RestMethod -Uri "${env:API_BASE_URI}/api/Application/uid/${UID}" -Method Get -Headers $CHeaders -ErrorAction Stop
             Write-Output "$([System.Char]::ConvertFromUTF32("0x1F7E2")) APPLICATION MATCHED: [ ${UID} ]"
             # go to end, nothing left to do!
         }
