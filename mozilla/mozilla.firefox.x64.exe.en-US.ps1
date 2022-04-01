@@ -24,3 +24,4 @@ $adr_installswitches = "-ms -ma"  # used for backwards compatability
 $adr_displayname = "Mozilla Firefox (x64 en-US)"  # OPTIONAL
 $adr_geo = "au-syd1-07"
 $adr_uninstallargs = "-ms"
+$adr_uninstallprocess = "void_uninstall"
