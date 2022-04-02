@@ -14,7 +14,7 @@ $adr_licenseacceptrequired = $true
 $adr_rebootrequired = $true
 $adr_category = "Productivity"
 $adr_xft = "mc"
-$adr_locale = "au-syd1-07"
+$adr_locale = "upcloud_au_syd_07"
 $adr_arch = "x64"
 $adr_lcid = "MUI"
 $adr_exectype = "exe"
@@ -22,6 +22,6 @@ $adr_followuri = "https://ardownload2.adobe.com/pub/adobe/acrobat/win/AcrobatDC/
 $adr_absoluteuri = $null  # $null if not known
 $adr_installswitches = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOPSHORTCUT=1"  # used for backwards compatability
 $adr_displayname = "Adobe Acrobat Reader DC MUI"  # OPTIONAL
-$adr_geo = "au-syd1-07"
+$adr_geo = "upcloud_au_syd_07"
 $adr_uninstallargs = "msi-void"
 $adr_uninstallprocess = "void_uninstall"
