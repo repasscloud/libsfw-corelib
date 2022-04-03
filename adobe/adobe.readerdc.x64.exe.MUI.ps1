@@ -34,3 +34,4 @@ $adr_uninstallargs = "msi-void"
 <# NOTES #>
 #~ CoreLib, do not edit
 #~ Adobe installs as an EXE, uninstalls as an MSI
+#~ Adobe installs sometimes, othertimes it get stuck
