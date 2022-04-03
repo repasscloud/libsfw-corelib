@@ -22,12 +22,14 @@ $adr_followuri = "https://ardownload2.adobe.com/pub/adobe/acrobat/win/AcrobatDC/
 $adr_absoluteuri = $null  # $null if not known
 $adr_installcmd = "AcroRdrDCx64" + $adr_version.Replace('.','') + "_MUI.exe"
 $adr_installargs = "/sAll /msi /qn ALLUSERS=1 EULA_ACCEPT=YES DISABLEDESKTOPSHORTCUT=1"  # used for backwards compatability
-$adr_displayname = "Adobe Acrobat Reader DC MUI"  # OPTIONAL
+$adr_displayname = "Adobe Acrobat DC (64-bit)"  # OPTIONAL
+$adr_displaypublisher = "Adobe"
+$ad_displayversion = $adr_version
 $adr_detectmethod = "Registry"
 $adr_uninstallprocess = "msi"  # "void_uninstall","msi","exe","exe2","inno","script"
-$adr_uninstallcmd = [System.String]::Empty
-$adr_uninstallargs = [System.String]::Empty
-$adr_uninstallargs = [System.String]::Empty
+$adr_uninstallcmd = "MsiExec.exe /I{AC76BA86-1033-FF00-7760-BC15014EA700}"
+$adr_uninstallargs = "msi-void"
+
 
 <# NOTES #>
-#> Adobe installs as an EXE, uninstalls as an MSI
+#~ Adobe installs as an EXE, uninstalls as an MSI
