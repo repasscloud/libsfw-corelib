@@ -31,7 +31,6 @@ $adr_uninstallprocess = "msi"  # "void_uninstall","msi","exe","exe2","inno","scr
 $adr_uninstallcmd = "MsiExec.exe /I{AC76BA86-1033-FF00-7760-BC15014EA700}"
 $adr_uninstallargs = "msi-void"
 
-C:\Program Files\Adobe\Acrobat DC\Acrobat\22.1.20085.0
 <# NOTES #>
 #~ CoreLib, do not edit
 #~ Adobe installs as an EXE, uninstalls as an MSI
