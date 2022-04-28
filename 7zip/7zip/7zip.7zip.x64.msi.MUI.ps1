@@ -8,7 +8,7 @@ $adr_uri = "https://www.7-zip.org/download.html"
 $adr_version = (((((Invoke-WebRequest -Uri $adr_uri -UserAgent $userAgent -UseBasicParsing).Links | Where-Object -FilterScript {$_.href -match $adr_regex} | Select-Object -First 1).outerHTML -replace '<A href="a/7z','') -replace '\-x64\.msi.*$','')/100).ToString()
 $adr_publisher = "Igor Pavlov"
 $adr_name = "7-Zip"
-$adr_copyright = "Copyright © $((Get-Date).ToString("yyyy")) Igor Pavlov"
+$adr_copyright = "Copyright (c) $((Get-Date).ToString("yyyy")) Igor Pavlov"
 $adr_nuspec = "https://raw.githubusercontent.com/chocolatey-community/chocolatey-packages/master/automatic/7zip/7zip.nuspec"
 $adr_licenseacceptrequired = $false
 $adr_rebootrequired = $false
