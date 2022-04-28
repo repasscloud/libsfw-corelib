@@ -5,7 +5,7 @@ $userAgent = [Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer
 <# APP SPECIFIC CODE - DO NOT EDIT #>
 $adr_regex = '^.*-x64.msi$'
 $adr_uri = "https://www.7-zip.org/download.html"
-$adr_version = ((((Invoke-WebRequest -Uri $adr_uri -UserAgent $userAgent -UseBasicParsing).Links | Where-Object -FilterScript {$_.href -match $adr_regex} | Select-Object -First 1).outerHTML -replace '<A href="a/7z','') -replace '\-x64\.msi.*$','')/100
+$adr_version = (((((Invoke-WebRequest -Uri $adr_uri -UserAgent $userAgent -UseBasicParsing).Links | Where-Object -FilterScript {$_.href -match $adr_regex} | Select-Object -First 1).outerHTML -replace '<A href="a/7z','') -replace '\-x64\.msi.*$','')/100).ToString()
 $adr_publisher = "Igor Pavlov"
 $adr_name = "7-Zip"
 $adr_copyright = "Copyright © $((Get-Date).ToString("yyyy")) Igor Pavlov"
