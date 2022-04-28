@@ -30,7 +30,7 @@ $adr_absoluteuri = $adr_followuri  # $null if not known
 # $adr_uninstallprocess = "msi"  # "void_uninstall","msi","exe","exe2","inno","script"
 # $adr_uninstallcmd = "MsiExec.exe /I{AC76BA86-1033-FF00-7760-BC15014EA700}"
 # $adr_uninstallargs = "msi-void"
-
+$alt_summary = [System.String]::Empty
 
 # <# NOTES #>
 # #~ CoreLib, do not edit
