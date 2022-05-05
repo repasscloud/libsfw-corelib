@@ -16,7 +16,7 @@ $adr_category = "Internet"
 $adr_xft = "mc"
 $adr_locale = "au-syd1-07"
 $adr_arch = "x64"
-$adr_lcid = "en-US"
+$adr_lcid = "en_US"
 $adr_exectype = "msi"
 $adr_followuri = 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win64&lang=en-US'
 $adr_absoluteuri = "https://download-installer.cdn.mozilla.net/pub/firefox/releases/${adr_version}/win64/en-US/Firefox Setup ${adr_version}.msi"  # $null if not known
