@@ -15,11 +15,12 @@ $adr_rebootrequired = $false
 $adr_category = "Internet"
 $adr_xft = "mc"
 $adr_locale = "au-syd1-07"
-$adr_arch = "x86"
+$adr_arch = "x64"
 $adr_lcid = "en-US"
-$adr_exectype = "msi"
-$adr_followuri = 'https://download.mozilla.org/?product=firefox-msi-latest-ssl&os=win&lang=en-US'
-$adr_installswitches = "/qn"  # used for backwards compatability
-$adr_displayname = "Mozilla Firefox (x86 en-US)"  # OPTIONAL
+$adr_exectype = "exe"
+$adr_followuri = 'https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US'
+$adr_absoluteuri = $null  # $null if not known
+$adr_installswitches = "-ms -ma"  # used for backwards compatability
+$adr_displayname = "Mozilla Firefox (x64 en-US)"  # OPTIONAL
 $adr_geo = "au-syd1-07"
-$adr_uninstallargs = "msi-void"
+$adr_uninstallargs = "-ms"
